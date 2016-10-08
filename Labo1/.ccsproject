@@ -12,4 +12,5 @@
 	<createSlaveProjects value=""/>
 	<templateProperties value="id=com.ti.ccstudio.project.templates.blinkCMSISStyle_msp432,"/>
 	<filesToOpen value="blink.c,"/>
+	<isTargetManual value="false"/>
 </projectOptions>

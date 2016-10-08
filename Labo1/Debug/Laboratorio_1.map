@@ -1,17 +1,17 @@
 ******************************************************************************
                   TI ARM Linker PC v15.12.1                    
 ******************************************************************************
->> Linked Sun Aug 21 23:15:43 2016
+>> Linked Mon Aug 22 21:57:47 2016
 
 OUTPUT FILE NAME:   <Laboratorio_1.out>
-ENTRY POINT SYMBOL: "_c_int00"  address: 0000065d
+ENTRY POINT SYMBOL: "_c_int00"  address: 00000731
 
 
 MEMORY CONFIGURATION
 
          name            origin    length      used     unused   attr    fill
 ----------------------  --------  ---------  --------  --------  ----  --------
-  MAIN                  00000000   00040000  0000081a  0003f7e6  R  X
+  MAIN                  00000000   00040000  000008a6  0003f75a  R  X
   INFO                  00200000   00004000  00000000  00004000  R  X
   SRAM_CODE             01000000   00010000  0000021c  0000fde4  RW X
   SRAM_DATA             20000000   00010000  0000021c  0000fde4  RW  
@@ -21,10 +21,10 @@ SEGMENT ALLOCATION MAP
 
 run origin  load origin   length   init length attrs members
 ----------  ----------- ---------- ----------- ----- -------
-00000000    00000000    0000081c   0000081c    r-x
+00000000    00000000    000008ac   000008ac    r-x
   00000000    00000000    00000140   00000140    r-- .intvecs
-  00000140    00000140    000006ae   000006ae    r-x .text
-  000007f0    000007f0    0000002c   0000002c    r-- .cinit
+  00000140    00000140    0000073a   0000073a    r-x .text
+  00000880    00000880    0000002c   0000002c    r-- .cinit
 20000000    20000000    0000001c   00000000    rw-
   20000000    20000000    0000001c   00000000    rw- .data
 2000fe00    2000fe00    00000200   00000000    rw-
@@ -41,30 +41,30 @@ section   page    origin      length       input sections
 
 .binit     0    00000000    00000000     
 
-.text      0    00000140    000006ae     
+.text      0    00000140    0000073a     
                   00000140    00000328     system_msp432p401r.obj (.text)
-                  00000468    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
-                  00000504    0000007a                                   : memset_t2.obj (.text)
-                  0000057e    00000002                                   : mpu_init.obj (.text)
-                  00000580    00000070                                   : autoinit.obj (.text)
-                  000005f0    0000006a                                   : copy_decompress_rle.obj (.text)
-                  0000065a    00000002                                   : startup.obj (.text)
-                  0000065c    00000054                                   : boot.obj (.text)
-                  000006b0    00000054                                   : exit.obj (.text)
-                  00000704    0000004c                                   : cpy_tbl.obj (.text)
-                  00000750    00000048     blink.obj (.text)
-                  00000798    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
-                  000007b0    00000014                                   : _lock.obj (.text)
-                  000007c4    00000012     startup_msp432p401r_ccs.obj (.text)
-                  000007d6    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
-                  000007e4    00000006                                   : copy_decompress_rle.obj (.text:decompress:rle24)
-                  000007ea    00000004                                   : pre_init.obj (.text)
+                  00000468    000000d4     labo1.obj (.text)
+                  0000053c    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
+                  000005d8    0000007a                                   : memset_t2.obj (.text)
+                  00000652    00000002                                   : mpu_init.obj (.text)
+                  00000654    00000070                                   : autoinit.obj (.text)
+                  000006c4    0000006a                                   : copy_decompress_rle.obj (.text)
+                  0000072e    00000002                                   : startup.obj (.text)
+                  00000730    00000054                                   : boot.obj (.text)
+                  00000784    00000054                                   : exit.obj (.text)
+                  000007d8    0000004c                                   : cpy_tbl.obj (.text)
+                  00000824    00000018                                   : args_main.obj (.text)
+                  0000083c    00000014                                   : _lock.obj (.text)
+                  00000850    00000012     startup_msp432p401r_ccs.obj (.text)
+                  00000862    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
+                  00000870    00000006                                   : copy_decompress_rle.obj (.text:decompress:rle24)
+                  00000876    00000004                                   : pre_init.obj (.text)
 
-.cinit     0    000007f0    0000002c     
-                  000007f0    0000001a     (.cinit..data.load) [load image, compression = rle]
-                  0000080a    00000002     --HOLE-- [fill = 0]
-                  0000080c    00000008     (__TI_handler_table)
-                  00000814    00000008     (__TI_cinit_table)
+.cinit     0    00000880    0000002c     
+                  00000880    0000001a     (.cinit..data.load) [load image, compression = rle]
+                  0000089a    00000002     --HOLE-- [fill = 0]
+                  0000089c    00000008     (__TI_handler_table)
+                  000008a4    00000008     (__TI_cinit_table)
 
 .init_array 
 *          0    00000000    00000000     UNINITIALIZED
@@ -85,9 +85,9 @@ MODULE SUMMARY
     .\
        system_msp432p401r.obj        808    0         8      
        startup_msp432p401r_ccs.obj   18     320       0      
-       blink.obj                     72     0         0      
+       labo1.obj                     212    0         0      
     +--+-----------------------------+------+---------+---------+
-       Total:                        898    320       8      
+       Total:                        1038   320       8      
                                                              
     C:\ti\ccsv6\tools\compiler\ti-cgt-arm_15.12.1.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
        memcpy_t2.obj                 156    0         0      
@@ -110,18 +110,18 @@ MODULE SUMMARY
        Stack:                        0      0         1024   
        Linker Generated:             0      42        0      
     +--+-----------------------------+------+---------+---------+
-       Grand Total:                  1710   362       1080   
+       Grand Total:                  1850   362       1080   
 
 
 LINKER GENERATED COPY TABLES
 
-__TI_cinit_table @ 00000814 records: 1, size/record: 8, table size: 8
-	.data: load addr=000007f0, load size=0000001a bytes, run addr=20000000, run size=0000001c bytes, compression=rle
+__TI_cinit_table @ 000008a4 records: 1, size/record: 8, table size: 8
+	.data: load addr=00000880, load size=0000001a bytes, run addr=20000000, run size=0000001c bytes, compression=rle
 
 
 LINKER GENERATED HANDLER TABLE
 
-__TI_handler_table @ 0000080c records: 2, size/record: 4, table size: 8
+__TI_handler_table @ 0000089c records: 2, size/record: 4, table size: 8
 	index: 0, handler: __TI_decompress_rle24
 	index: 1, handler: __TI_decompress_none
 
@@ -130,7 +130,8 @@ GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name
 
 address   name                           
 -------   ----                           
-000006b1  C$$EXIT                        
+00000785  C$$EXIT                        
+000004d3  PORT1_ISR                      
 UNDEFED   SHT$$INIT_ARRAY$$Base          
 UNDEFED   SHT$$INIT_ARRAY$$Limit         
 20000018  SystemCoreClock                
@@ -139,51 +140,52 @@ UNDEFED   SHT$$INIT_ARRAY$$Limit
 4000480c  WDTCTL_SYM                     
 20010000  __STACK_END                    
 00000200  __STACK_SIZE                   
-00000814  __TI_CINIT_Base                
-0000081c  __TI_CINIT_Limit               
-0000080c  __TI_Handler_Table_Base        
-00000814  __TI_Handler_Table_Limit       
-00000581  __TI_auto_init                 
+000008a4  __TI_CINIT_Base                
+000008ac  __TI_CINIT_Limit               
+0000089c  __TI_Handler_Table_Base        
+000008a4  __TI_Handler_Table_Limit       
+00000655  __TI_auto_init                 
 20000000  __TI_cleanup_ptr               
-000007d7  __TI_decompress_none           
-000007e5  __TI_decompress_rle24          
+00000863  __TI_decompress_none           
+00000871  __TI_decompress_rle24          
 20000004  __TI_dtors_ptr                 
 20000008  __TI_enable_exit_profile_output
 ffffffff  __TI_pprof_out_hndl            
 ffffffff  __TI_prof_data_size            
 ffffffff  __TI_prof_data_start           
 00000000  __TI_static_base__             
-00000505  __aeabi_memclr                 
-00000505  __aeabi_memclr4                
-00000505  __aeabi_memclr8                
-00000469  __aeabi_memcpy                 
-00000469  __aeabi_memcpy4                
-00000469  __aeabi_memcpy8                
-00000507  __aeabi_memset                 
-00000507  __aeabi_memset4                
-00000507  __aeabi_memset8                
+000005d9  __aeabi_memclr                 
+000005d9  __aeabi_memclr4                
+000005d9  __aeabi_memclr8                
+0000053d  __aeabi_memcpy                 
+0000053d  __aeabi_memcpy4                
+0000053d  __aeabi_memcpy8                
+000005db  __aeabi_memset                 
+000005db  __aeabi_memset4                
+000005db  __aeabi_memset8                
 ffffffff  __binit__                      
 ffffffff  __c_args__                     
-0000057f  __mpu_init                     
+00000653  __mpu_init                     
 2000fe00  __stack                        
-00000799  _args_main                     
-0000065d  _c_int00                       
+00000825  _args_main                     
+00000731  _c_int00                       
 2000000c  _lock                          
-000007bf  _nop                           
-000007b7  _register_lock                 
-000007b1  _register_unlock               
-0000065b  _system_post_cinit             
-000007eb  _system_pre_init               
+0000084b  _nop                           
+00000843  _register_lock                 
+0000083d  _register_unlock               
+0000072f  _system_post_cinit             
+00000877  _system_pre_init               
 20000010  _unlock                        
-000006b5  abort                          
+00000789  abort                          
 ffffffff  binit                          
-00000705  copy_in                        
-000006bd  exit                           
+000007d9  copy_in                        
+00000791  exit                           
 00000000  interruptVectors               
-00000751  main                           
+00000475  main                           
 20000014  main_func_sp                   
-00000469  memcpy                         
-0000050d  memset                         
+0000053d  memcpy                         
+000005e1  memset                         
+0000047f  setup                          
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -195,37 +197,39 @@ address   name
 00000141  SystemCoreClockUpdate          
 00000200  __STACK_SIZE                   
 000003b5  SystemInit                     
-00000469  __aeabi_memcpy                 
-00000469  __aeabi_memcpy4                
-00000469  __aeabi_memcpy8                
-00000469  memcpy                         
-00000505  __aeabi_memclr                 
-00000505  __aeabi_memclr4                
-00000505  __aeabi_memclr8                
-00000507  __aeabi_memset                 
-00000507  __aeabi_memset4                
-00000507  __aeabi_memset8                
-0000050d  memset                         
-0000057f  __mpu_init                     
-00000581  __TI_auto_init                 
-0000065b  _system_post_cinit             
-0000065d  _c_int00                       
-000006b1  C$$EXIT                        
-000006b5  abort                          
-000006bd  exit                           
-00000705  copy_in                        
-00000751  main                           
-00000799  _args_main                     
-000007b1  _register_unlock               
-000007b7  _register_lock                 
-000007bf  _nop                           
-000007d7  __TI_decompress_none           
-000007e5  __TI_decompress_rle24          
-000007eb  _system_pre_init               
-0000080c  __TI_Handler_Table_Base        
-00000814  __TI_CINIT_Base                
-00000814  __TI_Handler_Table_Limit       
-0000081c  __TI_CINIT_Limit               
+00000475  main                           
+0000047f  setup                          
+000004d3  PORT1_ISR                      
+0000053d  __aeabi_memcpy                 
+0000053d  __aeabi_memcpy4                
+0000053d  __aeabi_memcpy8                
+0000053d  memcpy                         
+000005d9  __aeabi_memclr                 
+000005d9  __aeabi_memclr4                
+000005d9  __aeabi_memclr8                
+000005db  __aeabi_memset                 
+000005db  __aeabi_memset4                
+000005db  __aeabi_memset8                
+000005e1  memset                         
+00000653  __mpu_init                     
+00000655  __TI_auto_init                 
+0000072f  _system_post_cinit             
+00000731  _c_int00                       
+00000785  C$$EXIT                        
+00000789  abort                          
+00000791  exit                           
+000007d9  copy_in                        
+00000825  _args_main                     
+0000083d  _register_unlock               
+00000843  _register_lock                 
+0000084b  _nop                           
+00000863  __TI_decompress_none           
+00000871  __TI_decompress_rle24          
+00000877  _system_pre_init               
+0000089c  __TI_Handler_Table_Base        
+000008a4  __TI_CINIT_Base                
+000008a4  __TI_Handler_Table_Limit       
+000008ac  __TI_CINIT_Limit               
 20000000  __TI_cleanup_ptr               
 20000004  __TI_dtors_ptr                 
 20000008  __TI_enable_exit_profile_output
@@ -245,4 +249,4 @@ ffffffff  binit
 UNDEFED   SHT$$INIT_ARRAY$$Base          
 UNDEFED   SHT$$INIT_ARRAY$$Limit         
 
-[54 symbols]
+[56 symbols]

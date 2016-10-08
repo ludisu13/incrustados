@@ -7,32 +7,32 @@ CMD_SRCS += \
 ../msp432p401r.cmd 
 
 C_SRCS += \
-../blink.c \
+../labo1.c \
 ../startup_msp432p401r_ccs.c \
 ../system_msp432p401r.c 
 
 OBJS += \
-./blink.obj \
+./labo1.obj \
 ./startup_msp432p401r_ccs.obj \
 ./system_msp432p401r.obj 
 
 C_DEPS += \
-./blink.d \
+./labo1.d \
 ./startup_msp432p401r_ccs.d \
 ./system_msp432p401r.d 
 
 C_DEPS__QUOTED += \
-"blink.d" \
+"labo1.d" \
 "startup_msp432p401r_ccs.d" \
 "system_msp432p401r.d" 
 
 OBJS__QUOTED += \
-"blink.obj" \
+"labo1.obj" \
 "startup_msp432p401r_ccs.obj" \
 "system_msp432p401r.obj" 
 
 C_SRCS__QUOTED += \
-"../blink.c" \
+"../labo1.c" \
 "../startup_msp432p401r_ccs.c" \
 "../system_msp432p401r.c" 
 
