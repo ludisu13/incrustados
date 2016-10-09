@@ -18,6 +18,7 @@ struct Slot
 	Task * slotTask;
 	uint64_t required_ticks;
 	uint64_t current_ticks;
+	uint64_t last_ticks;
 };
 
 

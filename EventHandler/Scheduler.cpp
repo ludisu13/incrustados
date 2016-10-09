@@ -38,6 +38,7 @@ uint8_t Scheduler::attach(Task * i_ToAttach, uint64_t i_u64TickInterval)
     {
         EventsSchedule[mNextSlot].slotTask = i_ToAttach;
         EventsSchedule[mNextSlot].required_ticks=i_u64TickInterval;
+        EventsSchedule[mNextSlot].last_ticks=0U;
         mOpenSlots--;
         mNextSlot++;
     }
@@ -54,7 +55,7 @@ uint8_t Scheduler::run(void)
     Task * NextTask = (uintptr_t) 0;
     uint8_t l_u8ReturnCode = NO_ERR;
 
-    while(NextTaskSlot<NUMBER_OF_SLOTS)
+    while(NextTaskSlot<=NUMBER_OF_SLOTS)
     {
         NextTask = static_cast<Task *> (CurrentSchedule[NextTaskSlot].slotTask);
         if(NextTask != ((uintptr_t) 0))
@@ -67,8 +68,20 @@ uint8_t Scheduler::run(void)
            break;
         }
     }
+    clean(0);
     return l_u8ReturnCode;
 }
+
+void Scheduler::clean(uint8_t inputIndex)
+{
+	for(uint8_t index = inputIndex; index <= (NUMBER_OF_SLOTS); index++)
+	    {
+	        CurrentSchedule[index].slotTask= (uintptr_t) 0;
+
+	    }
+	    return;
+}
+
 
 uint8_t Scheduler::CalculateSchedule(void)
 {
@@ -78,6 +91,7 @@ uint8_t Scheduler::CalculateSchedule(void)
 	{
 		if(EventsSchedule[NextTaskSlot].slotTask==NULL)
 		{
+		    clean(NextTaskSlot);
 			break ;
 		}
 		if(EventsSchedule[NextTaskSlot].required_ticks==1U)
@@ -86,10 +100,10 @@ uint8_t Scheduler::CalculateSchedule(void)
 			}
 		else
 			{	EventsSchedule[NextTaskSlot].current_ticks=ticks;
-				if(EventsSchedule[NextTaskSlot].current_ticks==EventsSchedule[NextTaskSlot].required_ticks)
+				if(abs(EventsSchedule[NextTaskSlot].current_ticks-EventsSchedule[NextTaskSlot].last_ticks)==EventsSchedule[NextTaskSlot].required_ticks)
 				{
 					CurrentSchedule[NextTaskSlot]=EventsSchedule[NextTaskSlot];
-					EventsSchedule[NextTaskSlot].current_ticks=0U;
+					EventsSchedule[NextTaskSlot].last_ticks=ticks;
 				}
 
 			}

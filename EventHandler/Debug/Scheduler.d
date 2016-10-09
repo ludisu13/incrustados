@@ -15,6 +15,8 @@ Scheduler.obj: C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmFunc.h
 Scheduler.obj: C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmSimd.h
 Scheduler.obj: C:/ti/ccsv6/ccs_base/arm/include/system_msp432p401r.h
 Scheduler.obj: ../Task.hpp
+Scheduler.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdlib.h
+Scheduler.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h
 
 ../Scheduler.cpp: 
 ../Scheduler.hpp: 
@@ -31,3 +33,5 @@ C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmFunc.h:
 C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmSimd.h: 
 C:/ti/ccsv6/ccs_base/arm/include/system_msp432p401r.h: 
 ../Task.hpp: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdlib.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h: 

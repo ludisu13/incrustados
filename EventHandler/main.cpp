@@ -1,6 +1,7 @@
 #define __NOP __nop
 #include "msp.h"
 #include "main.hpp"
+#include <stdlib.h>
 #include "Scheduler.hpp"
 #include "Task.hpp"
 #include "LED.hpp"
@@ -13,13 +14,13 @@ void main(void)
     Scheduler MainScheduler;
     LED BlinkLED;
     Setup();
-    MainScheduler.attach(&BlinkLED,1000);
+    MainScheduler.attach(&BlinkLED,5);
     while(1){
     	__wfe();
         if(SystemTicks != MainScheduler.ticks)
         {	MainScheduler.ticks = SystemTicks;
-            MainScheduler.CalculateSchedule();
-            MainScheduler.run();
+        	MainScheduler.CalculateSchedule();
+        	MainScheduler.run();
         }
     };
 }
@@ -53,8 +54,8 @@ void Setup(void)
 	// - Start the timer in UP mode.
 	// - Re-enable interrupts
 	__disable_irq();
-	//TIMER32_1->LOAD = 0x002DC6C0; //~1s ---> a 3Mhz
-	TIMER32_1->LOAD = 0x00000BB8; //~1ms ---> a 3Mhz
+	TIMER32_1->LOAD = 0x002DC6C0; //~1s ---> a 3Mhz
+	//TIMER32_1->LOAD = 0x00000BB8; //~1ms ---> a 3Mhz
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
 	NVIC_EnableIRQ(T32_INT1_IRQn);

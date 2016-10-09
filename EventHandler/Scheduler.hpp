@@ -11,7 +11,7 @@
 #define __NOP __nop
 #include "msp.h"
 #include "Task.hpp"
-
+#include <stdlib.h>
 #define NUMBER_OF_SLOTS 255
 #define NULL            0
 
@@ -27,6 +27,7 @@ public:
 private:
     uint8_t mOpenSlots;
     uint8_t mNextSlot;
+    void clean(uint8_t inputIndex);
     Slot  EventsSchedule[NUMBER_OF_SLOTS];
     Slot  CurrentSchedule[NUMBER_OF_SLOTS];
     uint8_t SortScheduleByPriority(Task * i_pSchedule);
