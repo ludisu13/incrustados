@@ -57,6 +57,7 @@ extern unsigned long __STACK_END;
 /* External declarations for the interrupt handlers used by the application. */
 /* To be added by user */
 extern void PORT1_IRQHandler(void);
+extern void timer_interrupt(void);
 
 /* Interrupt vector table.  Note that the proper constructs must be placed on this to */
 /* ensure that it ends up at physical address 0x0000.0000 or at the start of          */
@@ -91,7 +92,7 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* COMP0 ISR                 */
     defaultISR,                             /* COMP1 ISR                 */
     defaultISR,                             /* TA0_0 ISR                 */
-    defaultISR,                             /* TA0_N ISR                 */
+    timer_interrupt,                             /* TA0_N ISR                 */
     defaultISR,                             /* TA1_0 ISR                 */
     defaultISR,                             /* TA1_N ISR                 */
     defaultISR,                             /* TA2_0 ISR                 */

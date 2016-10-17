@@ -18,6 +18,7 @@ main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h
 main.obj: ../Scheduler.hpp
 main.obj: ../Struct_Task.hpp
 main.obj: ../Task.hpp
+main.obj: ../Message.hpp
 main.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdlib.h
 main.obj: ../LED.hpp
 
@@ -39,5 +40,6 @@ C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h:
 ../Scheduler.hpp: 
 ../Struct_Task.hpp: 
 ../Task.hpp: 
+../Message.hpp: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdlib.h: 
 ../LED.hpp: 
