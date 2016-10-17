@@ -1,17 +1,17 @@
 #include "LED.hpp"
 
 
-LED::LED()
+LED::LED(uint8_t iledMask)
 {
     //ctor
-
-	P2->DIR |= BIT1;
+	ledMask=iledMask;
+	P2->DIR |= iledMask;
 }
 
 uint8_t LED::run(void)
 {
 
-	P2->OUT ^= BIT1;
+	P2->OUT ^= ledMask;
     //#########################
     // Blink code
     //#########################
