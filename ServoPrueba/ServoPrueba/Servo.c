@@ -24,25 +24,31 @@ void main(void)
 	// - Re-enable interrupts
 
 	__disable_irq();
-	TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__2 | TIMER_A_CTL_IE;
-	NVIC_SetPriority(TA0_N_IRQn,1);
-	NVIC_EnableIRQ(TA0_N_IRQn);
+	TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__2 ;//| TIMER_A_CTL_IE;
+	//NVIC_SetPriority(TA0_N_IRQn,1);
+	NVIC_SetPriority(PORT1_IRQn,1);
+	NVIC_EnableIRQ(PORT1_IRQn);
+	//NVIC_EnableIRQ(TA0_N_IRQn);
 	TIMER_A0->CTL |=  TIMER_A_CTL_MC__UP;
 	TIMER_A0->CCR[0] = 30000; // 30 000 -> 20ms Period
-	TIMER_A0->CCR[2] = 27755; // 3000 -> 2ms, 1500 -> 1ms, 2250 -> 1.5ms
-	TIMER_A0->CCTL[2] |= TIMER_A_CCTLN_OUTMOD_3  | TIMER_A_CCTLN_CCIFG; //Set/Reset (cuando CCR[0] se pone en 0, cuando CCR[1] se pone en 1)
-	TIMER_A0->CCTL[0] |= TIMER_A_CCTLN_OUTMOD_3  | TIMER_A_CCTLN_CCIFG;
+	TIMER_A0->CCR[2] = 27750; // 3000 -> 2ms, 1500 -> 1ms, 2250 -> 1.5ms
+	TIMER_A0->CCTL[2] |= TIMER_A_CCTLN_OUTMOD_3; //Set/Reset (cuando CCR[0] se pone en 0, cuando CCR[1] se pone en 1)
+	P1->DIR |= BIT0;
 	P2->DIR |= BIT5; // La salida para el servo es el bit 5 del puerto 2
+	//P2->IE |= BIT5;
+	P2->SEL0 =BIT5;
+	P2->SEL1 =0;
+	//P2->IFG = 0;
 
+	PMAP->KEYID = PMAP_KEYID_VAL;
+	P2MAP ->PMAP_REGISTER5 |= PMAP_TA0CCR2A;
 
 	//Acelerometro
-//	P4->DIR |= BIT0;
-//	ADC14-> MCTL[0] |= ADC14_MCTLN_INCH_13;
+	//	P4->DIR |= BIT0;
+	//	ADC14-> MCTL[0] |= ADC14_MCTLN_INCH_13;
 
 	//BOTON CONFIG
-	NVIC_EnableIRQ(PORT1_IRQn);
-	NVIC_SetPriority(PORT1_IRQn,1);
-	P1 ->DIR &= ~(BIT1) | ~(BIT4);
+	P1->DIR &= ~(BIT1) | ~(BIT4);
     P1->OUT |= BIT1 | BIT4;
     P1->REN |= BIT1 | BIT4;                         // Enable pull-up resistor (P1.1 and P1.4 output high)
     P1->SEL0 = 0;
@@ -62,31 +68,22 @@ void main(void)
 void PORT1_IRQHandler(void)
 {
     volatile uint32_t i;
-
+    P2->OUT ^=BIT0;
     // Toggling the output on the LED
     if(P1->IFG & BIT1){
-    	TIMER_A0->CCR[2] = 27005;
-
-    	// Delay for switch debounce //BOTONES
-     //   for(i = 0; i < 10000; i++){
-   	    	P1->IFG &= ~BIT1;
-    //	}
-    }
-    else if(P1->IFG & BIT4){
-    	TIMER_A0->CCR[2] = 28495;
+    	TIMER_A0->CCR[2] = 26200;
 
     	// Delay for switch debounce
-    	// for(i = 0; i < 10000; i++){
+        for(i = 0; i < 10000; i++){
+   	    	P1->IFG &= ~BIT1;
+    	}
+    }
+    else if(P1->IFG & BIT4){
+    	TIMER_A0->CCR[2] = 29100;
+
+    	// Delay for switch debounce
+    	 for(i = 0; i < 10000; i++){
     	   	P1->IFG &= ~BIT4;
-         //}
+         }
     }
 }
-
-void timer_interrupt(void)
-{
-	TIMER_A0->CCTL[0] &= ~  TIMER_A_CCTLN_CCIFG;
-	TIMER_A0->CCTL[2] &= ~  TIMER_A_CCTLN_CCIFG; //LIMPIAR LAS BANDERAS
-	P2->OUT ^=0X5; //TOGGLE A LA SALIDA PWM
-	TIMER_A0->CTL &= ~TIMER_A_CTL_IFG; //LIMPIAR
-}
-
