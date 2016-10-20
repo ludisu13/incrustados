@@ -19,6 +19,8 @@ struct Slot
 	uint64_t required_ticks;
 	uint64_t current_ticks;
 	uint64_t last_ticks;
+	bool isOneShot;
+	bool executed;
 };
 
 

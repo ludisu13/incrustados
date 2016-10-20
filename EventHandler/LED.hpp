@@ -15,9 +15,10 @@
 class LED : public Task
 {
     public:
-        LED(uint8_t ledMask);
+        LED(uint8_t ledMask,uint8_t id);
         uint8_t ledMask;
         virtual uint8_t run(void);
+        virtual uint8_t readMessage(uint8_t source,uint8_t data);
     protected:
     private:
 };

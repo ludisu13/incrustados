@@ -7,8 +7,8 @@
  *
  *
  */
-#ifndef STRUCT_SLOT_HPP_
-#define STRUCT_SLOT_HPP_
+#ifndef STRUCT_MESSAGE_HPP_
+#define STRUCT_MESSAGE_HPP_
 #define __NOP __nop
 #include "msp.h"
 
@@ -17,7 +17,8 @@ struct Message
 	uint8_t source;
 	uint8_t destination;
 	bool messageType;
-	uint8_t data;
+	uint64_t data;
+	bool messageWritten;
 };
 
 

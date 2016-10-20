@@ -22,11 +22,12 @@ class Scheduler
 public:
     Scheduler();
     uint64_t ticks;
-    uint8_t attach(Task * i_ToAttach);
-    uint8_t attach(Task * i_ToAttach, uint64_t i_u64TickInterval);
-    uint8_t attachMessage(uint8_t source,uint8_t destination,bool messageType,uint8_t data);
+    uint8_t attach(Task * i_ToAttach,bool shot);
+    uint8_t attach(Task * i_ToAttach, uint64_t i_u64TickInterval,bool shot);
+    uint8_t attachMessage(uint8_t source,uint8_t destination,bool messageType,uint64_t data);
     uint8_t run(void);
     uint8_t CalculateSchedule(void);
+    uint8_t mailMan(void);
     Message MessageQueue[NUMBER_OF_MESSAGES];
 private:
     uint8_t mOpenSlots;
@@ -34,8 +35,11 @@ private:
     uint8_t mOpenSlotsMessages;
     uint8_t mNextSlotMessages;
     void clean(uint8_t inputIndex);
+    void cleanMail(void);
+    void runMessage(uint8_t taskIndex,uint8_t msgIndex);
     Slot  EventsSchedule[NUMBER_OF_SLOTS];
     Slot  CurrentSchedule[NUMBER_OF_SLOTS];
+
     uint8_t SortScheduleByPriority(Task * i_pSchedule);
 };
 

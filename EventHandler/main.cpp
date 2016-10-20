@@ -5,22 +5,28 @@
 #include "Scheduler.hpp"
 #include "Task.hpp"
 #include "LED.hpp"
+#define dCount 40
 #include "Struct_Task.hpp"
 uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 int dummycount=0;
+Scheduler MainScheduler;
+bool debounce=false;
+uint8_t debounceCount=0U;
 void main(void)
 {
-    Scheduler MainScheduler;
-    LED BlinkLED(0x01);
-    LED BlinkLED2(0x02);
+
+    LED BlinkLED(0x01,0U);//red
+ LED BlinkLED2(0x02,1U);//green
     Setup();
-    MainScheduler.attach(&BlinkLED,5);
-    MainScheduler.attach(&BlinkLED2,10);
+  MainScheduler.attach(&BlinkLED,1000,false);
+  MainScheduler.attach(&BlinkLED2,2000,true);
     while(1){
     	__wfe();
         if(SystemTicks != MainScheduler.ticks)
-        {	MainScheduler.ticks = SystemTicks;
+        {
+        	MainScheduler.ticks = SystemTicks;
+        	MainScheduler.mailMan();
         	MainScheduler.CalculateSchedule();
         	MainScheduler.run();
         }
@@ -47,6 +53,7 @@ void Setup(void)
 	// - P1.0 is connected to the Red LED
 	P1->DIR |= BIT0;
 	P2->DIR |= BIT2;
+	P2->OUT=0;
 	// Configuring P1.1 (switch) as input with pull-up
 	// resistor. Rest of pins are configured as output low.
 	// Notice intentional '=' assignment since all P1 pins are being
@@ -68,7 +75,7 @@ void Setup(void)
 	// - Start the timer in UP mode.
 	// - Re-enable interrupts
 	__disable_irq();
-	TIMER32_1->LOAD = 0x002DC6C0; //~1s ---> a 3Mhz
+	TIMER32_1->LOAD = 0x0000BB80; //~1ms ---> a 48Mhz
 	//TIMER32_1->LOAD = 0x00000BB8; //~1ms ---> a 3Mhz
 	TIMER32_1->CONTROL = TIMER32_CONTROL_SIZE | TIMER32_CONTROL_PRESCALE_0 | TIMER32_CONTROL_MODE | TIMER32_CONTROL_IE | TIMER32_CONTROL_ENABLE;
 	NVIC_SetPriority(T32_INT1_IRQn,1);
@@ -86,15 +93,25 @@ extern "C"
 		TIMER32_1->INTCLR = 0U;
 		P1->OUT ^= BIT0;
 		SystemTicks++;
+
+		if(debounce==true)
+			{debounceCount++;}
+		if(debounceCount==dCount)
+			{debounceCount=0;
+			debounce=false;
+			P1->IE=BIT1;}
 		return;
 	}
 
 	void PORT1_IRQHandler(void)
 	{
-	    dummycount++;
-	    MainScheduler.attachMessage(1,1,false,7);
+	   debounce=true;
+	    MainScheduler.attachMessage(0,0,false,10000);
+	   // MainScheduler.attachMessage(0,1,false,1500);
 		P2->OUT ^= BIT2;
-	    P1->IFG &= ~BIT1;
+	   P1->IFG &= ~BIT1;
+	   P1->IE &= ~BIT1;
+	   dummycount++;
 	   return;
 	}
 }
