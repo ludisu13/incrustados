@@ -20,7 +20,7 @@ void main(void)
  LED BlinkLED2(0x02,1U);//green
     Setup();
   MainScheduler.attach(&BlinkLED,1000,false);
-  MainScheduler.attach(&BlinkLED2,2000,true);
+  MainScheduler.attach(&BlinkLED2,2000,false);
     while(1){
     	__wfe();
         if(SystemTicks != MainScheduler.ticks)
@@ -104,13 +104,13 @@ extern "C"
 	}
 
 	void PORT1_IRQHandler(void)
-	{
+	{	P1->IFG &= ~BIT1;
+	   P1->IE &= ~BIT1;
 	   debounce=true;
 	    MainScheduler.attachMessage(0,0,false,10000);
-	   // MainScheduler.attachMessage(0,1,false,1500);
-		P2->OUT ^= BIT2;
-	   P1->IFG &= ~BIT1;
-	   P1->IE &= ~BIT1;
+	   MainScheduler.attachMessage(0,1,false,1500);
+		//P2->OUT ^= BIT2;
+
 	   dummycount++;
 	   return;
 	}
