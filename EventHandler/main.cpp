@@ -5,14 +5,25 @@
 #include "Scheduler.hpp"
 #include "Task.hpp"
 #include "LED.hpp"
+extern "C"
+{
+#include <driverlib.h>
+#include <grlib.h>
+#include "Crystalfontz128x128_ST7735.h"
+}
+#include <stdio.h>
 #define dCount 40
 #include "Struct_Task.hpp"
-uint8_t Task::m_u8NextTaskID = 0;
 volatile static uint64_t SystemTicks = 0;
 int dummycount=0;
 Scheduler MainScheduler;
 bool debounce=false;
 uint8_t debounceCount=0U;
+/* Graphic library context */
+Graphics_Context g_sContext;
+Graphics_Rectangle g_sNew;
+Graphics_Rectangle g_sOld;
+
 void main(void)
 {
 
@@ -43,8 +54,9 @@ void Setup(void)
 	// ****************************
 	//         DEVICE CONFIG
 	// ****************************
-	// - Disable WDT
-	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
+	/* Halting WDT and disabling master interrupts */
+	MAP_WDT_A_holdTimer();
+	MAP_Interrupt_disableMaster();
 
 
 	// ****************************
@@ -82,7 +94,80 @@ void Setup(void)
 	NVIC_SetPriority(PORT1_IRQn,1); //Enabling PORT1 interrupt
 	NVIC_EnableIRQ(T32_INT1_IRQn);
 	NVIC_EnableIRQ(PORT1_IRQn);
-	__enable_irq();
+
+	/* Set the core voltage level to VCORE1 */
+	    MAP_PCM_setCoreVoltageLevel(PCM_VCORE1);
+
+	    /* Set 2 flash wait states for Flash bank 0 and 1*/
+	    MAP_FlashCtl_setWaitState(FLASH_BANK0, 2);
+	    MAP_FlashCtl_setWaitState(FLASH_BANK1, 2);
+
+	    /* Initializes Clock System */
+	    MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
+	    MAP_CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+	    MAP_CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+	    MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
+	    MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
+
+	    /* Initializes display */
+	    Crystalfontz128x128_Init();
+
+	    /* Set default screen orientation */
+	    Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
+
+	    /* Initializes graphics context */
+	    Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
+	    GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+
+	    g_sNew.xMax = 128;
+		g_sNew.xMin =  0;
+		g_sNew.yMin = 0;
+
+		g_sOld.xMin = 0;
+		g_sOld.xMax = 128;
+		g_sOld.yMax = 128;
+		int interrupt_count=0;
+
+	    /* Configures Pin 4.0, 4.2, and 6.1 as ADC input */
+	    MAP_GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P4, GPIO_PIN0 | GPIO_PIN2, GPIO_TERTIARY_MODULE_FUNCTION);
+	    MAP_GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P6, GPIO_PIN1, GPIO_TERTIARY_MODULE_FUNCTION);
+
+	    /* Initializing ADC (ADCOSC/64/8) */
+	    MAP_ADC14_enableModule();
+	    MAP_ADC14_initModule(ADC_CLOCKSOURCE_ADCOSC, ADC_PREDIVIDER_64, ADC_DIVIDER_8,
+	            0);
+
+	    /* Configuring ADC Memory (ADC_MEM0 - ADC_MEM2 (A11, A13, A14)  with no repeat)
+	         * with internal 2.5v reference */
+	    MAP_ADC14_configureMultiSequenceMode(ADC_MEM0, ADC_MEM2, true);
+	    MAP_ADC14_configureConversionMemory(ADC_MEM0,
+	            ADC_VREFPOS_AVCC_VREFNEG_VSS,
+	            ADC_INPUT_A14, ADC_NONDIFFERENTIAL_INPUTS);
+
+	    MAP_ADC14_configureConversionMemory(ADC_MEM1,
+	            ADC_VREFPOS_AVCC_VREFNEG_VSS,
+	            ADC_INPUT_A13, ADC_NONDIFFERENTIAL_INPUTS);
+
+	    MAP_ADC14_configureConversionMemory(ADC_MEM2,
+	            ADC_VREFPOS_AVCC_VREFNEG_VSS,
+	            ADC_INPUT_A11, ADC_NONDIFFERENTIAL_INPUTS);
+
+	    /* Enabling the interrupt when a conversion on channel 2 (end of sequence)
+	     *  is complete and enabling conversions */
+	    MAP_ADC14_enableInterrupt(ADC_INT2);
+	    /* Enabling Interrupts */
+	        MAP_Interrupt_enableInterrupt(INT_ADC14);
+	        MAP_Interrupt_enableMaster();
+
+	        /* Setting up the sample timer to automatically step through the sequence
+	         * convert.
+	         */
+	        MAP_ADC14_enableSampleTimer(ADC_AUTOMATIC_ITERATION);
+
+	        /* Triggering the start of the sample */
+	        MAP_ADC14_enableConversion();
+	        MAP_ADC14_toggleConversionTrigger();
+	        Graphics_clearDisplay(&g_sContext);
 	return;
 }
 
@@ -113,5 +198,32 @@ extern "C"
 
 	   dummycount++;
 	   return;
+	}
+
+	void ADC14_IRQHandler(void)
+	{
+	    uint64_t status;
+
+	    status = MAP_ADC14_getEnabledInterruptStatus();
+	    MAP_ADC14_clearInterruptFlag(status);
+
+	/*  interrupt_count++;ADC_MEM2 conversion completed */
+	    if((status & ADC_INT2))
+	    {
+	        /* Store ADC14 conversion results */
+	        g_sNew.yMax= 0.0194*ADC14_getResult(ADC_MEM2)-93.12;
+	        g_sOld.yMin = g_sNew.yMax;
+	        if(ADC14_getResult(ADC_MEM1)< 8000)
+	        {Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_DOWN);}
+	        else
+	        {
+	        	Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
+	        }
+	       Graphics_fillRectangleOnDisplay(g_sContext.display,
+	      		&g_sNew, 0xa145);
+	       Graphics_fillRectangleOnDisplay(g_sContext.display,
+	       		&g_sOld,GRAPHICS_COLOR_BLUE);
+	}
+
 	}
 }

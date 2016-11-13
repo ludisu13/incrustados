@@ -42,6 +42,10 @@
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_15.12.compilerID.INCLUDE_PATH.1422465938" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.MSP432_15.12.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${CCS_BASE_ROOT}/arm/include&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CCS_BASE_ROOT}/arm/include/CMSIS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/driverlib/MSP432P4xx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/GrLib/fonts}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/GrLib/grlib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/LcdDriver}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${CG_TOOL_ROOT}/include&quot;"/>
 								</option>
 								<option id="com.ti.ccstudio.buildDefinitions.MSP432_15.12.compilerID.DEBUGGING_MODEL.585817980" name="Debugging model" superClass="com.ti.ccstudio.buildDefinitions.MSP432_15.12.compilerID.DEBUGGING_MODEL" value="com.ti.ccstudio.buildDefinitions.MSP432_15.12.compilerID.DEBUGGING_MODEL.SYMDEBUG__DWARF" valueType="enumerated"/>

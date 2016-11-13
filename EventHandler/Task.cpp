@@ -4,6 +4,7 @@ Task::Task()
 {
 
     m_bIsFinished = false;
+
 }
 
 
