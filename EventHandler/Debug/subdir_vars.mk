@@ -6,6 +6,7 @@
 CPP_SRCS += \
 ../LED.cpp \
 ../Scheduler.cpp \
+../Screen.cpp \
 ../Servo.cpp \
 ../Task.cpp \
 ../main.cpp 
@@ -20,6 +21,7 @@ C_SRCS += \
 OBJS += \
 ./LED.obj \
 ./Scheduler.obj \
+./Screen.obj \
 ./Servo.obj \
 ./Task.obj \
 ./main.obj \
@@ -29,6 +31,7 @@ OBJS += \
 CPP_DEPS += \
 ./LED.d \
 ./Scheduler.d \
+./Screen.d \
 ./Servo.d \
 ./Task.d \
 ./main.d 
@@ -40,6 +43,7 @@ C_DEPS += \
 CPP_DEPS__QUOTED += \
 "LED.d" \
 "Scheduler.d" \
+"Screen.d" \
 "Servo.d" \
 "Task.d" \
 "main.d" 
@@ -51,6 +55,7 @@ C_DEPS__QUOTED += \
 OBJS__QUOTED += \
 "LED.obj" \
 "Scheduler.obj" \
+"Screen.obj" \
 "Servo.obj" \
 "Task.obj" \
 "main.obj" \
@@ -60,6 +65,7 @@ OBJS__QUOTED += \
 CPP_SRCS__QUOTED += \
 "../LED.cpp" \
 "../Scheduler.cpp" \
+"../Screen.cpp" \
 "../Servo.cpp" \
 "../Task.cpp" \
 "../main.cpp" 

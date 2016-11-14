@@ -11,6 +11,7 @@ extern "C"
 #include <grlib.h>
 #include "Crystalfontz128x128_ST7735.h"
 }
+#include "Screen.hpp"
 #include <stdio.h>
 #define dCount 40
 #include "Struct_Task.hpp"
@@ -27,11 +28,13 @@ Graphics_Rectangle g_sOld;
 void main(void)
 {
 
-    LED BlinkLED(0x01,0U);//red
- LED BlinkLED2(0x02,1U);//green
-    Setup();
+   LED BlinkLED(0x01,0U);//red
+ //LED BlinkLED2(0x02,1U);//green
+ screen myScreen(0x03,&g_sContext,&g_sNew,&g_sOld);
+ MainScheduler.attach(&myScreen,300,false);
   MainScheduler.attach(&BlinkLED,1000,false);
-  MainScheduler.attach(&BlinkLED2,2000,false);
+  Setup();
+ // MainScheduler.attach(&BlinkLED2,2000,false);
     while(1){
     	__wfe();
         if(SystemTicks != MainScheduler.ticks)
@@ -117,7 +120,7 @@ void Setup(void)
 
 	    /* Initializes graphics context */
 	    Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
-	    GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
+	    //GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
 
 	    g_sNew.xMax = 128;
 		g_sNew.xMin =  0;
@@ -192,8 +195,8 @@ extern "C"
 	{	P1->IFG &= ~BIT1;
 	   P1->IE &= ~BIT1;
 	   debounce=true;
-	    MainScheduler.attachMessage(0,0,false,10000);
-	   MainScheduler.attachMessage(0,1,false,1500);
+	  //  MainScheduler.attachMessage(0,0,false,10000);
+	   //MainScheduler.attachMessage(0,1,false,1500);
 		//P2->OUT ^= BIT2;
 
 	   dummycount++;
@@ -207,23 +210,14 @@ extern "C"
 	    status = MAP_ADC14_getEnabledInterruptStatus();
 	    MAP_ADC14_clearInterruptFlag(status);
 
+
+
 	/*  interrupt_count++;ADC_MEM2 conversion completed */
 	    if((status & ADC_INT2))
-	    {
-	        /* Store ADC14 conversion results */
-	        g_sNew.yMax= 0.0194*ADC14_getResult(ADC_MEM2)-93.12;
-	        g_sOld.yMin = g_sNew.yMax;
-	        if(ADC14_getResult(ADC_MEM1)< 8000)
-	        {Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_DOWN);}
-	        else
-	        {
-	        	Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
-	        }
-	       Graphics_fillRectangleOnDisplay(g_sContext.display,
-	      		&g_sNew, 0xa145);
-	       Graphics_fillRectangleOnDisplay(g_sContext.display,
-	       		&g_sOld,GRAPHICS_COLOR_BLUE);
-	}
+	    {	MainScheduler.attachMessage(0,3,true,ADC14_getResult(ADC_MEM2));
+	    	MainScheduler.attachMessage(1,3,true,ADC14_getResult(ADC_MEM1));
 
+	}
+	    MAP_Interrupt_disableInterrupt(INT_ADC14);
 	}
 }
