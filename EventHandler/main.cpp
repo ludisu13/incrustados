@@ -31,8 +31,8 @@ void main(void)
    LED BlinkLED(0x01,0U);//red
  //LED BlinkLED2(0x02,1U);//green
  screen myScreen(0x03,&g_sContext,&g_sNew,&g_sOld);
- MainScheduler.attach(&myScreen,300,false);
-  MainScheduler.attach(&BlinkLED,1000,false);
+ MainScheduler.attach(&myScreen,280,false);
+  MainScheduler.attach(&BlinkLED,500,false);
   Setup();
  // MainScheduler.attach(&BlinkLED2,2000,false);
     while(1){
@@ -98,6 +98,7 @@ void Setup(void)
 	NVIC_EnableIRQ(T32_INT1_IRQn);
 	NVIC_EnableIRQ(PORT1_IRQn);
 
+
 	/* Set the core voltage level to VCORE1 */
 	    MAP_PCM_setCoreVoltageLevel(PCM_VCORE1);
 
@@ -160,6 +161,27 @@ void Setup(void)
 	    MAP_ADC14_enableInterrupt(ADC_INT2);
 	    /* Enabling Interrupts */
 	        MAP_Interrupt_enableInterrupt(INT_ADC14);
+	        TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__8; // | TIMER_A_CTL_IE;
+	        		TIMER_A0->EX0 = TIMER_A_EX0_TAIDEX_1;
+	        		//NVIC_SetPriority(TA0_N_IRQn,1);
+	        		//NVIC_EnableIRQ(TA0_N_IRQn);
+
+
+	        		TIMER_A0->CTL |=  TIMER_A_CTL_MC__UP;
+	        		TIMER_A0->CCR[0] = 60000; // 30 000 -> 20ms Period
+	        		TIMER_A0->CCR[2] = 55500; // 3000 -> 2ms, 1500 -> 1ms, 2250 -> 1.5ms
+	        		TIMER_A0->CCTL[2] |= TIMER_A_CCTLN_OUTMOD_3; //Set/Reset (cuando CCR[0] se pone en 0, cuando CCR[1] se pone en 1)
+
+
+	        		P2->DIR |= BIT5; // La salida para el servo es el bit 5 del puerto 2
+	        		//P2->IE |= BIT5;
+	        		P2->SEL0 =BIT5;
+	        		P2->SEL1 =0;
+	        		//P2->IFG = 0;
+
+	        		// Mapeo del Timer_A0.2 al pin 2.5 (PWM) output
+	        		PMAP->KEYID = PMAP_KEYID_VAL;
+	        		P2MAP ->PMAP_REGISTER5 |= PMAP_TA0CCR2A;
 	        MAP_Interrupt_enableMaster();
 
 	        /* Setting up the sample timer to automatically step through the sequence

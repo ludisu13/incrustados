@@ -30,7 +30,8 @@ uint8_t screen::readMessage(uint8_t source, uint64_t data)
 	switch(source)
 	{
 			case 0: (*newRec).yMax= 0.0194*data-93.12;
-	        		(*oldRec).yMin =(*newRec).yMax;// actualizacion
+	        		(*oldRec).yMin =(*newRec).yMax;
+	        		TIMER_A0->CCR[2]=-0.85*data+62280;// actualizacion
 
 			case 1:  if(data>8000)
 						{newOrientation=true;}//rotacion

@@ -132,7 +132,7 @@ uint8_t Scheduler::CalculateSchedule(void)
 					EventsSchedule[NextTaskSlot].last_ticks=ticks;
 
 					if(EventsSchedule[NextTaskSlot].isOneShot==false)
-										{CurrentSchedule[NextTaskSlot]=EventsSchedule[NextTaskSlot];}
+										{CurrentSchedule[NextTaskSlot]=static_cast<Slot>(EventsSchedule[NextTaskSlot]);}
 									else
 										{
 
