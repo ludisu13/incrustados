@@ -14,6 +14,8 @@ Screen.obj: C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmFunc.h
 Screen.obj: C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmSimd.h
 Screen.obj: C:/ti/ccsv6/ccs_base/arm/include/system_msp432p401r.h
 Screen.obj: ../Task.hpp
+Screen.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdlib.h
+Screen.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h
 Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/driverlib.h
 Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/adc14.h
 Screen.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdbool.h
@@ -47,7 +49,6 @@ Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4x
 Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/wdt_a.h
 Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/GrLib/grlib/grlib.h
 Screen.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/assert.h
-Screen.obj: C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h
 Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/LcdDriver/Crystalfontz128x128_ST7735.h
 Screen.obj: C:/Users/Luis/Documents/incrustados/EventHandler/GrLib/grlib/grlib.h
 
@@ -65,6 +66,8 @@ C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmFunc.h:
 C:/ti/ccsv6/ccs_base/arm/include/CMSIS/core_cmSimd.h: 
 C:/ti/ccsv6/ccs_base/arm/include/system_msp432p401r.h: 
 ../Task.hpp: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdlib.h: 
+C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h: 
 C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/driverlib.h: 
 C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/adc14.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/stdbool.h: 
@@ -98,6 +101,5 @@ C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/uart.h:
 C:/Users/Luis/Documents/incrustados/EventHandler/driverlib/MSP432P4xx/wdt_a.h: 
 C:/Users/Luis/Documents/incrustados/EventHandler/GrLib/grlib/grlib.h: 
 C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/assert.h: 
-C:/ti/ccsv6/tools/compiler/ti-cgt-arm_15.12.1.LTS/include/linkage.h: 
 C:/Users/Luis/Documents/incrustados/EventHandler/LcdDriver/Crystalfontz128x128_ST7735.h: 
 C:/Users/Luis/Documents/incrustados/EventHandler/GrLib/grlib/grlib.h: 

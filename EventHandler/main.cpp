@@ -22,19 +22,19 @@ bool debounce=false;
 uint8_t debounceCount=0U;
 /* Graphic library context */
 Graphics_Context g_sContext;
-Graphics_Rectangle g_sNew;
-Graphics_Rectangle g_sOld;
+Graphics_Rectangle g_sSky;
+Graphics_Rectangle g_sLand;
 
 void main(void)
 {
 
-   LED BlinkLED(0x01,0U);//red
- //LED BlinkLED2(0x02,1U);//green
- screen myScreen(0x03,&g_sContext,&g_sNew,&g_sOld);
- MainScheduler.attach(&myScreen,280,false);
-  MainScheduler.attach(&BlinkLED,500,false);
+  LED BlinkLED(0x01,0U);//red
+//LED BlinkLED2(0x02,1U);//green
+ screen myScreen(0x03,&g_sContext,&g_sLand,&g_sSky);
+ MainScheduler.attach(&myScreen,260,false);
+ MainScheduler.attach(&BlinkLED,500,false);
   Setup();
- // MainScheduler.attach(&BlinkLED2,2000,false);
+ //MainScheduler.attach(&BlinkLED2,2000,false);
     while(1){
     	__wfe();
         if(SystemTicks != MainScheduler.ticks)
@@ -123,13 +123,15 @@ void Setup(void)
 	    Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 	    //GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
 
-	    g_sNew.xMax = 128;
-		g_sNew.xMin =  0;
-		g_sNew.yMin = 0;
+	    g_sLand.xMax = 127;
+		g_sLand.xMin =  0;
+		g_sLand.yMax = 127;
+		g_sLand.yMin = 64;
 
-		g_sOld.xMin = 0;
-		g_sOld.xMax = 128;
-		g_sOld.yMax = 128;
+		g_sSky.xMin = 0;
+		g_sSky.xMax = 127;
+		g_sSky.yMax = 63;
+		g_sSky.yMin =0 ;
 		int interrupt_count=0;
 
 	    /* Configures Pin 4.0, 4.2, and 6.1 as ADC input */
@@ -182,7 +184,7 @@ void Setup(void)
 	        		// Mapeo del Timer_A0.2 al pin 2.5 (PWM) output
 	        		PMAP->KEYID = PMAP_KEYID_VAL;
 	        		P2MAP ->PMAP_REGISTER5 |= PMAP_TA0CCR2A;
-	        MAP_Interrupt_enableMaster();
+
 
 	        /* Setting up the sample timer to automatically step through the sequence
 	         * convert.
@@ -192,7 +194,12 @@ void Setup(void)
 	        /* Triggering the start of the sample */
 	        MAP_ADC14_enableConversion();
 	        MAP_ADC14_toggleConversionTrigger();
-	        Graphics_clearDisplay(&g_sContext);
+	       Graphics_clearDisplay(&g_sContext);
+	       Graphics_fillRectangleOnDisplay(g_sContext.display,
+	            		&g_sLand, 0xa347);
+	             Graphics_fillRectangleOnDisplay(g_sContext.display,
+	             		&g_sSky,GRAPHICS_COLOR_BLUE);
+	             MAP_Interrupt_enableMaster();
 	return;
 }
 
