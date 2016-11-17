@@ -1,41 +1,29 @@
 #include "Servo.hpp"
 
-Servo::Servo()
+Servo::Servo(uint8_t i_i8ID, uint16_t i_i16NewAngle)
 {
-
-	//ctor
-	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
-
-
-	// ****************************
-	//       TIMER CONFIG
-	// ****************************
-	// - Disable all interrupts
-	// - Configure Timer A0 with SMCLK, Division by 8, Enable the interrupt
-	// - Enable the interrupt in the NVIC
-	// - Start the timer in UP mode.
-	// - Re-enable interrupts
-
-	__disable_irq();
-	TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__2 | TIMER_A_CTL_IE;
-	NVIC_SetPriority(TA0_N_IRQn,1);
-	NVIC_EnableIRQ(TA0_N_IRQn);
-	TIMER_A0->CCR[0] = 10000;
-	TIMER_A0->CTL |=  TIMER_A_CTL_MC__UP;
-	P2->DIR |= BIT5;
-	P2->OUT |= BIT5;
-	__enable_irq();
-
-
-
+	m_u8TaskID= i_i8ID;
+	m_i16Angle= i_i16NewAngle;
 }
 
+	// **********************************
+	// servo run function
+	// changes duty cycle
+	// **********************************
 uint8_t Servo::run(void)
 {
-
-	P2->OUT |= BIT5;
-	TIMER_A0->CCR[1] = 9000; // CCR[0] - CCR[1] = 1000 Hz = 1ms
-
-
+	TIMER_A0->CCR[2]=m_i16Angle;
 	return(NO_ERR);
+}
+
+	// **********************************
+	// servo read message function
+	// Reads message to change duty cycle according to the reading from the accelerometer
+ 	// *********************
+uint8_t Servo::readMessage(uint8_t i_i8Source, uint64_t i_i64Data)
+{
+	if(i_i8Source==0){
+		m_i16Angle=-0.85*i_i64Data+62280;// change duty cycle
+	}
+	return (NO_ERR);
 }
