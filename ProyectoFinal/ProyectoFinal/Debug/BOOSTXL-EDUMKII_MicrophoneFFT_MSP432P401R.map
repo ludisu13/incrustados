@@ -1,0 +1,769 @@
+******************************************************************************
+                  TI ARM Linker PC v15.12.1                    
+******************************************************************************
+>> Linked Sun Dec 04 19:13:09 2016
+
+OUTPUT FILE NAME:   <BOOSTXL-EDUMKII_MicrophoneFFT_MSP432P401R.out>
+ENTRY POINT SYMBOL: "_c_int00"  address: 00035be9
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+  MAIN                  00000000   00040000  00036470  00009b90  R  X
+  INFO                  00200000   00004000  00000000  00004000  R  X
+  SRAM_CODE             01000000   00010000  00001f9f  0000e061  RW X
+  SRAM_DATA             20000000   00010000  00001f9f  0000e061  RW  
+
+
+SEGMENT ALLOCATION MAP
+
+run origin  load origin   length   init length attrs members
+----------  ----------- ---------- ----------- ----- -------
+00000000    00000000    00036474   00036474    r-x
+  00000000    00000000    00000140   00000140    r-- .intvecs
+  00000140    00000140    000337f8   000337f8    r-- .const
+  00033938    00033938    00002aac   00002aac    r-x .text
+  000363e8    000363e8    0000008c   0000008c    r-- .cinit
+20000000    20000000    00001da0   00000000    rw-
+  20000000    20000000    00001d27   00000000    rw- .bss
+  20001d28    20001d28    00000078   00000000    rw- .data
+2000fe00    2000fe00    00000200   00000000    rw-
+  2000fe00    2000fe00    00000200   00000000    rw- .stack
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.intvecs   0    00000000    00000140     
+                  00000000    00000140     startup_msp432p401r_ccs.obj (.intvecs:retain)
+
+.binit     0    00000000    00000000     
+
+.const     0    00000140    000337f8     
+                  00000140    00008000     dsplib-msp432.lib : arm_common_tables.obj (.const:twiddleCoef_4096)
+                  00008140    00006000                       : arm_common_tables.obj (.const:twiddleCoef_4096_q31)
+                  0000e140    00004000                       : arm_rfft_init_q15.obj (.const:realCoefAQ15)
+                  00012140    00004000                       : arm_rfft_init_q15.obj (.const:realCoefBQ15)
+                  00016140    00004000                       : arm_common_tables.obj (.const:twiddleCoef_2048)
+                  0001a140    00003000                       : arm_common_tables.obj (.const:twiddleCoef_2048_q31)
+                  0001d140    00003000                       : arm_common_tables.obj (.const:twiddleCoef_4096_q15)
+                  00020140    00002000                       : arm_common_tables.obj (.const:twiddleCoef_1024)
+                  00022140    00001f80                       : arm_common_tables.obj (.const:armBitRevIndexTable4096)
+                  000240c0    00001f80                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_4096)
+                  00026040    00001dc0                       : arm_common_tables.obj (.const:armBitRevIndexTable2048)
+                  00027e00    00001800                       : arm_common_tables.obj (.const:twiddleCoef_1024_q31)
+                  00029600    00001800                       : arm_common_tables.obj (.const:twiddleCoef_2048_q15)
+                  0002ae00    00001000                       : arm_common_tables.obj (.const:twiddleCoef_512)
+                  0002be00    00000f80                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_2048)
+                  0002cd80    00000e10                       : arm_common_tables.obj (.const:armBitRevIndexTable1024)
+                  0002db90    00000c00                       : arm_common_tables.obj (.const:twiddleCoef_1024_q15)
+                  0002e790    00000c00                       : arm_common_tables.obj (.const:twiddleCoef_512_q31)
+                  0002f390    00000800                       : arm_common_tables.obj (.const:twiddleCoef_256)
+                  0002fb90    000007c0                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_1024)
+                  00030350    00000600                       : arm_common_tables.obj (.const:twiddleCoef_256_q31)
+                  00030950    00000600                       : arm_common_tables.obj (.const:twiddleCoef_512_q15)
+                  00030f50    00000400                       : arm_common_tables.obj (.const:twiddleCoef_128)
+                  00031350    000003c0                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_512)
+                  00031710    00000380                       : arm_common_tables.obj (.const:armBitRevIndexTable512)
+                  00031a90    00000370                       : arm_common_tables.obj (.const:armBitRevIndexTable256)
+                  00031e00    00000300                       : arm_common_tables.obj (.const:twiddleCoef_128_q31)
+                  00032100    00000300                       : arm_common_tables.obj (.const:twiddleCoef_256_q15)
+                  00032400    000002f8     fontfixed6x8.obj (.const:.string:g_pucFontFixed6x8Data)
+                  000326f8    00000200     dsplib-msp432.lib : arm_common_tables.obj (.const:twiddleCoef_64)
+                  000328f8    000001e0                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_256)
+                  00032ad8    000001b0                       : arm_const_structs.obj (.const)
+                  00032c88    000001a0                       : arm_common_tables.obj (.const:armBitRevIndexTable128)
+                  00032e28    00000180                       : arm_common_tables.obj (.const:twiddleCoef_128_q15)
+                  00032fa8    00000180                       : arm_common_tables.obj (.const:twiddleCoef_64_q31)
+                  00033128    00000100                       : arm_common_tables.obj (.const:twiddleCoef_32)
+                  00033228    000000e0                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_128)
+                  00033308    000000c8     fontfixed6x8.obj (.const:g_sFontFixed6x8)
+                  000333d0    000000c0     dsplib-msp432.lib : arm_common_tables.obj (.const:twiddleCoef_32_q31)
+                  00033490    000000c0                       : arm_common_tables.obj (.const:twiddleCoef_64_q15)
+                  00033550    00000080     adc14.obj (.const:_ctlRegs)
+                  000335d0    00000080     dsplib-msp432.lib : arm_common_tables.obj (.const:twiddleCoef_16)
+                  00033650    00000070                       : arm_common_tables.obj (.const:armBitRevIndexTable64)
+                  000336c0    00000070                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_64)
+                  00033730    00000060                       : arm_common_tables.obj (.const:armBitRevIndexTable32)
+                  00033790    00000060                       : arm_common_tables.obj (.const:twiddleCoef_16_q31)
+                  000337f0    00000060                       : arm_common_tables.obj (.const:twiddleCoef_32_q15)
+                  00033850    00000030                       : arm_common_tables.obj (.const:armBitRevIndexTable_fixed_32)
+                  00033880    00000030                       : arm_common_tables.obj (.const:twiddleCoef_16_q15)
+                  000338b0    0000002c     Crystalfontz128x128_ST7735.obj (.const:g_sCrystalfontz128x128)
+                  000338dc    00000028     dsplib-msp432.lib : arm_common_tables.obj (.const:armBitRevIndexTable16)
+                  00033904    0000001c     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.const:$P$T0$1)
+                  00033920    00000018     dsplib-msp432.lib : arm_common_tables.obj (.const)
+
+.text      0    00033938    00002aac     
+                  00033938    000005d8     main.obj (.text:main)
+                  00033f10    0000033c     dsplib-msp432.lib : arm_cfft_radix4_q15.obj (.text:arm_radix4_butterfly_inverse_q15)
+                  0003424c    0000033c                       : arm_cfft_radix4_q15.obj (.text:arm_radix4_butterfly_q15)
+                  00034588    000002d2     string.obj (.text:Graphics_drawString)
+                  0003485a    000001b6     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_add_t2.obj (.text)
+                  00034a10    00000154     adc14.obj (.text:_getIndexForMemRegister)
+                  00034b64    00000110     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_Init)
+                  00034c74    00000106     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_PixelDrawMultiple)
+                  00034d7a    000000fc     rtsv7M4_T_le_v4SPD16_eabi.lib : fd_mul_t2.obj (.text)
+                  00034e76    000000dc     dsplib-msp432.lib : arm_rfft_q15.obj (.text:arm_split_rfft_q15)
+                  00034f52    00000002     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_Flush)
+                  00034f54    000000c4     dsplib-msp432.lib : arm_rfft_init_q15.obj (.text:arm_rfft_init_q15)
+                  00035018    000000c0                       : arm_bitreversal2.obj (.text)
+                  000350d8    000000ba                       : arm_cfft_q15.obj (.text:arm_cfft_q15)
+                  00035192    000000b6     timer_a.obj (.text:privateTimer_AProcessClockSourceDivider)
+                  00035248    000000b4     rtsv7M4_T_le_v4SPD16_eabi.lib : s_cosf.obj (.text)
+                  000352fc    000000a4     dsplib-msp432.lib : arm_cfft_q15.obj (.text:arm_cfft_radix4by2_inverse_q15)
+                  000353a0    000000a4                       : arm_cfft_q15.obj (.text:arm_cfft_radix4by2_q15)
+                  00035444    0000009c     rtsv7M4_T_le_v4SPD16_eabi.lib : memcpy_t2.obj (.text)
+                  000354e0    00000096     spi.obj (.text:SPI_initMaster)
+                  00035576    00000002     startup_msp432p401r_ccs.obj (.text:defaultISR)
+                  00035578    00000084     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_SetDrawFrame)
+                  000355fc    0000007e     dsplib-msp432.lib : arm_rfft_q15.obj (.text:arm_split_rifft_q15)
+                  0003567a    00000002     startup_msp432p401r_ccs.obj (.text:faultISR)
+                  0003567c    0000007c     dma.obj (.text:DMA_setChannelTransfer)
+                  000356f8    0000007a     dsplib-msp432.lib : arm_max_q15.obj (.text:arm_max_q15)
+                  00035772    0000007a     rtsv7M4_T_le_v4SPD16_eabi.lib : memset_t2.obj (.text)
+                  000357ec    00000070     adc14.obj (.text:ADC14_configureConversionMemory)
+                  0003585c    00000070     rtsv7M4_T_le_v4SPD16_eabi.lib : autoinit.obj (.text)
+                  000358cc    0000006e                                   : fd_tos_t2.obj (.text)
+                  0003593a    0000006c     dsplib-msp432.lib : arm_rfft_q15.obj (.text:arm_rfft_q15)
+                  000359a6    0000006a     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_rle.obj (.text)
+                  00035a10    00000068     string.obj (.text:Graphics_getStringWidth)
+                  00035a78    00000068     system_msp432p401r.obj (.text:SystemInit)
+                  00035ae0    0000005c     main.obj (.text:DMA_INT1_IRQHandler)
+                  00035b3c    00000056     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_RectFill)
+                  00035b92    00000002     startup_msp432p401r_ccs.obj (.text:nmiISR)
+                  00035b94    00000054     gpio.obj (.text:GPIO_setAsPeripheralModuleFunctionOutputPin)
+                  00035be8    00000054     rtsv7M4_T_le_v4SPD16_eabi.lib : boot.obj (.text)
+                  00035c3c    00000054                                   : exit.obj (.text)
+                  00035c90    00000050     gpio.obj (.text:GPIO_setAsPeripheralModuleFunctionInputPin)
+                  00035ce0    0000004c     rtsv7M4_T_le_v4SPD16_eabi.lib : cpy_tbl.obj (.text)
+                  00035d2c    0000004a     line.obj (.text:Graphics_drawLineH)
+                  00035d76    0000004a     line.obj (.text:Graphics_drawLineV)
+                  00035dc0    00000048     adc14.obj (.text:ADC14_configureSingleSampleMode)
+                  00035e08    00000048     timer_a.obj (.text:Timer_A_generatePWM)
+                  00035e50    00000044     adc14.obj (.text:ADC14_initModule)
+                  00035e94    00000044     dma.obj (.text:DMA_disableChannelAttribute)
+                  00035ed8    00000040     adc14.obj (.text:ADC14_setSampleHoldTrigger)
+                  00035f18    00000040     dma.obj (.text:DMA_getChannelAttribute)
+                  00035f58    00000040     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.text:HAL_LCD_SpiInit)
+                  00035f98    0000003c     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_LineDrawV)
+                  00035fd4    0000003a     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_LineDrawH)
+                  0003600e    0000003a     string.obj (.text:Graphics_drawStringCentered)
+                  00036048    00000038     rtsv7M4_T_le_v4SPD16_eabi.lib : fs_tod_t2.obj (.text)
+                  00036080    00000034     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_SetOrientation)
+                  000360b4    00000030     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.text:HAL_LCD_PortInit)
+                  000360e4    00000030     spi.obj (.text:is_A_Module)
+                  00036114    00000028     adc14.obj (.text:ADC14_setResultFormat)
+                  0003613c    00000028     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_ClearScreen)
+                  00036164    00000028     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_PixelDraw)
+                  0003618c    00000028     rtsv7M4_T_le_v4SPD16_eabi.lib : e_sqrtf.obj (.text)
+                  000361b4    00000024     gpio.obj (.text:GPIO_setAsOutputPin)
+                  000361d8    00000024     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.text:HAL_LCD_writeCommand)
+                  000361fc    00000020     dma.obj (.text:DMA_setChannelControl)
+                  0003621c    00000020     context.obj (.text:Graphics_initContext)
+                  0003623c    0000001a     string.obj (.text:Graphics_getNumberOfLeadingZeros)
+                  00036256    0000001a     spi.obj (.text:SPI_enableModule)
+                  00036270    00000018     gpio.obj (.text:GPIO_setOutputLowOnPin)
+                  00036288    00000018     rtsv7M4_T_le_v4SPD16_eabi.lib : args_main.obj (.text)
+                  000362a0    00000016     Crystalfontz128x128_ST7735.obj (.text:Crystalfontz128x128_ColorTranslate)
+                  000362b6    00000016     display.obj (.text:Graphics_drawHorizontalLineOnDisplay)
+                  000362cc    00000016     display.obj (.text:Graphics_drawVerticalLineOnDisplay)
+                  000362e2    00000002     rtsv7M4_T_le_v4SPD16_eabi.lib : mpu_init.obj (.text)
+                  000362e4    00000014     adc14.obj (.text:ADCIsConversionRunning)
+                  000362f8    00000014     gpio.obj (.text:GPIO_setOutputHighOnPin)
+                  0003630c    00000014     rtsv7M4_T_le_v4SPD16_eabi.lib : _lock.obj (.text)
+                  00036320    00000010     adc14.obj (.text:ADC14_enableModule)
+                  00036330    00000010     dma.obj (.text:DMA_enableModule)
+                  00036340    00000010     HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj (.text:HAL_LCD_writeData)
+                  00036350    0000000e     display.obj (.text:Graphics_drawPixelOnDisplay)
+                  0003635e    0000000e     context.obj (.text:Graphics_setBackgroundColor)
+                  0003636c    0000000e     context.obj (.text:Graphics_setForegroundColor)
+                  0003637a    0000000e     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_none.obj (.text:decompress:none)
+                  00036388    0000000c     dma.obj (.text:DMA_setControlBase)
+                  00036394    0000000c     spi.obj (.text:EUSCI_A_SPI_enable)
+                  000363a0    0000000c     spi.obj (.text:EUSCI_B_SPI_enable)
+                  000363ac    0000000c     startup_msp432p401r_ccs.obj (.text:resetISR)
+                  000363b8    0000000a     display.obj (.text:Graphics_clearDisplayOnDisplay)
+                  000363c2    0000000a     display.obj (.text:Graphics_translateColorOnDisplay)
+                  000363cc    00000008     context.obj (.text:Graphics_clearDisplay)
+                  000363d4    00000006     rtsv7M4_T_le_v4SPD16_eabi.lib : copy_decompress_rle.obj (.text:decompress:rle24)
+                  000363da    00000004     context.obj (.text:Graphics_setFont)
+                  000363de    00000004     rtsv7M4_T_le_v4SPD16_eabi.lib : pre_init.obj (.text)
+                  000363e2    00000002                                   : startup.obj (.text)
+
+.cinit     0    000363e8    0000008c     
+                  000363e8    00000063     (.cinit..data.load) [load image, compression = rle]
+                  0003644b    00000005     --HOLE-- [fill = 0]
+                  00036450    0000000b     (.cinit..bss.load) [load image, compression = rle]
+                  0003645b    00000001     --HOLE-- [fill = 0]
+                  0003645c    00000008     (__TI_handler_table)
+                  00036464    00000010     (__TI_cinit_table)
+
+.init_array 
+*          0    00000000    00000000     UNINITIALIZED
+
+.bss       0    20000000    00001d27     UNINITIALIZED
+                  20000000    00000800     (.common:data_input)
+                  20000800    00000800     (.common:hann)
+                  20001000    00000400     (.common:data_array1)
+                  20001400    00000400     (.common:data_array2)
+                  20001800    00000400     (.common:data_output)
+                  20001c00    00000100     (.common:controlTable)
+                  20001d00    0000001c     (.common:g_sContext)
+                  20001d1c    00000002     (.common:Lcd_ScreenHeigth)
+                  20001d1e    00000002     (.common:Lcd_ScreenWidth)
+                  20001d20    00000002     (.common:Lcd_TouchTrim)
+                  20001d22    00000001     (.common:Lcd_FlagRead)
+                  20001d23    00000001     (.common:Lcd_FontSolid)
+                  20001d24    00000001     (.common:Lcd_Orientation)
+                  20001d25    00000001     (.common:Lcd_PenSolid)
+                  20001d26    00000001     (.common:status)
+
+.data      0    20001d28    00000078     UNINITIALIZED
+                  20001d28    00000030     gpio.obj (.data:GPIO_PORT_TO_BASE)
+                  20001d58    00000018     main.obj (.data:pwmConfig)
+                  20001d70    00000014     main.obj (.data)
+                  20001d84    0000000c     rtsv7M4_T_le_v4SPD16_eabi.lib : exit.obj (.data:$O1$$)
+                  20001d90    00000008                                   : _lock.obj (.data:$O1$$)
+                  20001d98    00000004                                   : errno.obj (.data)
+                  20001d9c    00000004                                   : stkdepth_vars.obj (.data)
+
+.stack     0    2000fe00    00000200     UNINITIALIZED
+                  2000fe00    00000200     --HOLE--
+
+MODULE SUMMARY
+
+       Module                                               code    ro data   rw data
+       ------                                               ----    -------   -------
+    .\
+       main.obj                                             1588    0         14994  
+       startup_msp432p401r_ccs.obj                          18      320       0      
+       system_msp432p401r.obj                               104     0         0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               1710    320       14994  
+                                                                                     
+    .\GrLib\fonts\
+       fontfixed6x8.obj                                     0       960       0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               0       960       0      
+                                                                                     
+    .\GrLib\grlib\
+       string.obj                                           910     0         0      
+       line.obj                                             148     0         0      
+       display.obj                                          78      0         0      
+       context.obj                                          72      0         0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               1208    0         0      
+                                                                                     
+    .\LcdDriver\
+       Crystalfontz128x128_ST7735.obj                       1026    44        20     
+       HAL_MSP_EXP432P401R_Crystalfontz128x128_ST7735.obj   164     28        0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               1190    72        20     
+                                                                                     
+    .\driverlib\MSP432P4xx\
+       adc14.obj                                            732     128       0      
+       gpio.obj                                             244     0         96     
+       dma.obj                                              316     0         0      
+       timer_a.obj                                          254     0         0      
+       spi.obj                                              248     0         0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               1794    128       96     
+                                                                                     
+    ../dsplib-msp432.lib
+       arm_common_tables.obj                                0       176576    0      
+       arm_rfft_init_q15.obj                                196     32768     0      
+       arm_cfft_radix4_q15.obj                              1656    0         0      
+       arm_cfft_q15.obj                                     514     0         0      
+       arm_rfft_q15.obj                                     454     0         0      
+       arm_const_structs.obj                                0       432       0      
+       arm_bitreversal2.obj                                 192     0         0      
+       arm_max_q15.obj                                      122     0         0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               3134    209776    0      
+                                                                                     
+    C:\ti\ccsv6\tools\compiler\ti-cgt-arm_15.12.1.LTS\lib\rtsv7M4_T_le_v4SPD16_eabi.lib
+       fd_add_t2.obj                                        438     0         0      
+       fd_mul_t2.obj                                        252     0         0      
+       s_cosf.obj                                           180     0         0      
+       memcpy_t2.obj                                        156     0         0      
+       memset_t2.obj                                        122     0         0      
+       autoinit.obj                                         112     0         0      
+       copy_decompress_rle.obj                              112     0         0      
+       fd_tos_t2.obj                                        110     0         0      
+       exit.obj                                             84      0         24     
+       boot.obj                                             84      0         0      
+       cpy_tbl.obj                                          76      0         0      
+       fs_tod_t2.obj                                        56      0         0      
+       e_sqrtf.obj                                          40      0         0      
+       _lock.obj                                            20      0         16     
+       args_main.obj                                        24      0         0      
+       copy_decompress_none.obj                             14      0         0      
+       errno.obj                                            0       0         8      
+       stkdepth_vars.obj                                    0       0         8      
+       pre_init.obj                                         4       0         0      
+       mpu_init.obj                                         2       0         0      
+       startup.obj                                          2       0         0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Total:                                               1888    0         56     
+                                                                                     
+       Stack:                                               0       0         1024   
+       Linker Generated:                                    0       134       0      
+    +--+----------------------------------------------------+-------+---------+---------+
+       Grand Total:                                         10924   211390    16190  
+
+
+LINKER GENERATED COPY TABLES
+
+__TI_cinit_table @ 00036464 records: 2, size/record: 8, table size: 16
+	.data: load addr=000363e8, load size=00000063 bytes, run addr=20001d28, run size=00000078 bytes, compression=rle
+	.bss: load addr=00036450, load size=0000000b bytes, run addr=20000000, run size=00001d27 bytes, compression=rle
+
+
+LINKER GENERATED HANDLER TABLE
+
+__TI_handler_table @ 0003645c records: 2, size/record: 4, table size: 8
+	index: 0, handler: __TI_decompress_rle24
+	index: 1, handler: __TI_decompress_none
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+address   name                                       
+-------   ----                                       
+000357ed  ADC14_configureConversionMemory            
+00035dc1  ADC14_configureSingleSampleMode            
+00036321  ADC14_enableModule                         
+00035e51  ADC14_initModule                           
+00036115  ADC14_setResultFormat                      
+00035ed9  ADC14_setSampleHoldTrigger                 
+00035c3d  C$$EXIT                                    
+00034b65  Crystalfontz128x128_Init                   
+00035579  Crystalfontz128x128_SetDrawFrame           
+00036081  Crystalfontz128x128_SetOrientation         
+00035ae1  DMA_INT1_IRQHandler                        
+00035e95  DMA_disableChannelAttribute                
+00036331  DMA_enableModule                           
+00035f19  DMA_getChannelAttribute                    
+000361fd  DMA_setChannelControl                      
+0003567d  DMA_setChannelTransfer                     
+00036389  DMA_setControlBase                         
+00036395  EUSCI_A_SPI_enable                         
+000363a1  EUSCI_B_SPI_enable                         
+000361b5  GPIO_setAsOutputPin                        
+00035c91  GPIO_setAsPeripheralModuleFunctionInputPin 
+00035b95  GPIO_setAsPeripheralModuleFunctionOutputPin
+000362f9  GPIO_setOutputHighOnPin                    
+00036271  GPIO_setOutputLowOnPin                     
+000363cd  Graphics_clearDisplay                      
+000363b9  Graphics_clearDisplayOnDisplay             
+000362b7  Graphics_drawHorizontalLineOnDisplay       
+00035d2d  Graphics_drawLineH                         
+00035d77  Graphics_drawLineV                         
+00036351  Graphics_drawPixelOnDisplay                
+00034589  Graphics_drawString                        
+0003600f  Graphics_drawStringCentered                
+000362cd  Graphics_drawVerticalLineOnDisplay         
+00035a11  Graphics_getStringWidth                    
+0003621d  Graphics_initContext                       
+0003635f  Graphics_setBackgroundColor                
+000363db  Graphics_setFont                           
+0003636d  Graphics_setForegroundColor                
+000363c3  Graphics_translateColorOnDisplay           
+000360b5  HAL_LCD_PortInit                           
+00035f59  HAL_LCD_SpiInit                            
+000361d9  HAL_LCD_writeCommand                       
+00036341  HAL_LCD_writeData                          
+20001d22  Lcd_FlagRead                               
+20001d23  Lcd_FontSolid                              
+20001d24  Lcd_Orientation                            
+20001d25  Lcd_PenSolid                               
+20001d1c  Lcd_ScreenHeigth                           
+20001d1e  Lcd_ScreenWidth                            
+20001d20  Lcd_TouchTrim                              
+UNDEFED   SHT$$INIT_ARRAY$$Base                      
+UNDEFED   SHT$$INIT_ARRAY$$Limit                     
+00036257  SPI_enableModule                           
+000354e1  SPI_initMaster                             
+00035a79  SystemInit                                 
+00035e09  Timer_A_generatePWM                        
+4000480c  WDTCTL_SYM                                 
+20010000  __STACK_END                                
+00000200  __STACK_SIZE                               
+00036464  __TI_CINIT_Base                            
+00036474  __TI_CINIT_Limit                           
+0003645c  __TI_Handler_Table_Base                    
+00036464  __TI_Handler_Table_Limit                   
+0003585d  __TI_auto_init                             
+20001d84  __TI_cleanup_ptr                           
+0003637b  __TI_decompress_none                       
+000363d5  __TI_decompress_rle24                      
+20001d88  __TI_dtors_ptr                             
+20001d8c  __TI_enable_exit_profile_output            
+ffffffff  __TI_pprof_out_hndl                        
+ffffffff  __TI_prof_data_size                        
+ffffffff  __TI_prof_data_start                       
+00000000  __TI_static_base__                         
+000358cd  __aeabi_d2f                                
+00034865  __aeabi_dadd                               
+00034d7b  __aeabi_dmul                               
+0003485b  __aeabi_dsub                               
+00036049  __aeabi_f2d                                
+00035773  __aeabi_memclr                             
+00035773  __aeabi_memclr4                            
+00035773  __aeabi_memclr8                            
+00035445  __aeabi_memcpy                             
+00035445  __aeabi_memcpy4                            
+00035445  __aeabi_memcpy8                            
+00035775  __aeabi_memset                             
+00035775  __aeabi_memset4                            
+00035775  __aeabi_memset8                            
+ffffffff  __binit__                                  
+ffffffff  __c_args__                                 
+000362e3  __mpu_init                                 
+2000fe00  __stack                                    
+00036289  _args_main                                 
+00035be9  _c_int00                                   
+20001d90  _lock                                      
+0003631b  _nop                                       
+00036313  _register_lock                             
+0003630d  _register_unlock                           
+000363e3  _system_post_cinit                         
+000363df  _system_pre_init                           
+20001d94  _unlock                                    
+00035c41  abort                                      
+0002cd80  armBitRevIndexTable1024                    
+00032c88  armBitRevIndexTable128                     
+000338dc  armBitRevIndexTable16                      
+00026040  armBitRevIndexTable2048                    
+00031a90  armBitRevIndexTable256                     
+00033730  armBitRevIndexTable32                      
+00022140  armBitRevIndexTable4096                    
+00031710  armBitRevIndexTable512                     
+00033650  armBitRevIndexTable64                      
+0002fb90  armBitRevIndexTable_fixed_1024             
+00033228  armBitRevIndexTable_fixed_128              
+00033920  armBitRevIndexTable_fixed_16               
+0002be00  armBitRevIndexTable_fixed_2048             
+000328f8  armBitRevIndexTable_fixed_256              
+00033850  armBitRevIndexTable_fixed_32               
+000240c0  armBitRevIndexTable_fixed_4096             
+00031350  armBitRevIndexTable_fixed_512              
+000336c0  armBitRevIndexTable_fixed_64               
+00035083  arm_bitreversal_16                         
+00035019  arm_bitreversal_32                         
+000350d9  arm_cfft_q15                               
+000352fd  arm_cfft_radix4by2_inverse_q15             
+000353a1  arm_cfft_radix4by2_q15                     
+00032b38  arm_cfft_sR_f32_len1024                    
+00032b08  arm_cfft_sR_f32_len128                     
+00032ad8  arm_cfft_sR_f32_len16                      
+00032b48  arm_cfft_sR_f32_len2048                    
+00032b18  arm_cfft_sR_f32_len256                     
+00032ae8  arm_cfft_sR_f32_len32                      
+00032b58  arm_cfft_sR_f32_len4096                    
+00032b28  arm_cfft_sR_f32_len512                     
+00032af8  arm_cfft_sR_f32_len64                      
+00032c58  arm_cfft_sR_q15_len1024                    
+00032c28  arm_cfft_sR_q15_len128                     
+00032bf8  arm_cfft_sR_q15_len16                      
+00032c68  arm_cfft_sR_q15_len2048                    
+00032c38  arm_cfft_sR_q15_len256                     
+00032c08  arm_cfft_sR_q15_len32                      
+00032c78  arm_cfft_sR_q15_len4096                    
+00032c48  arm_cfft_sR_q15_len512                     
+00032c18  arm_cfft_sR_q15_len64                      
+00032bc8  arm_cfft_sR_q31_len1024                    
+00032b98  arm_cfft_sR_q31_len128                     
+00032b68  arm_cfft_sR_q31_len16                      
+00032bd8  arm_cfft_sR_q31_len2048                    
+00032ba8  arm_cfft_sR_q31_len256                     
+00032b78  arm_cfft_sR_q31_len32                      
+00032be8  arm_cfft_sR_q31_len4096                    
+00032bb8  arm_cfft_sR_q31_len512                     
+00032b88  arm_cfft_sR_q31_len64                      
+000356f9  arm_max_q15                                
+00033f11  arm_radix4_butterfly_inverse_q15           
+0003424d  arm_radix4_butterfly_q15                   
+00034f55  arm_rfft_init_q15                          
+0003593b  arm_rfft_q15                               
+00034e77  arm_split_rfft_q15                         
+000355fd  arm_split_rifft_q15                        
+ffffffff  binit                                      
+20001d80  color                                      
+20001c00  controlTable                               
+00035ce1  copy_in                                    
+00035249  cosf                                       
+20001000  data_array1                                
+20001400  data_array2                                
+20000000  data_input                                 
+20001800  data_output                                
+20001d78  doBitReverse                               
+20001d98  errno                                      
+00035c49  exit                                       
+20001d70  fftSize                                    
+20001d00  g_sContext                                 
+000338b0  g_sCrystalfontz128x128                     
+00033308  g_sFontFixed6x8                            
+20000800  hann                                       
+20001d74  ifftFlag                                   
+00000000  interruptVectors                           
+00033939  main                                       
+20001d9c  main_func_sp                               
+00035445  memcpy                                     
+0003577b  memset                                     
+20001d58  pwmConfig                                  
+0003618d  sqrtf                                      
+20001d26  status                                     
+20001d7c  switch_data                                
+00020140  twiddleCoef_1024                           
+0002db90  twiddleCoef_1024_q15                       
+00027e00  twiddleCoef_1024_q31                       
+00030f50  twiddleCoef_128                            
+00032e28  twiddleCoef_128_q15                        
+00031e00  twiddleCoef_128_q31                        
+000335d0  twiddleCoef_16                             
+00033880  twiddleCoef_16_q15                         
+00033790  twiddleCoef_16_q31                         
+00016140  twiddleCoef_2048                           
+00029600  twiddleCoef_2048_q15                       
+0001a140  twiddleCoef_2048_q31                       
+0002f390  twiddleCoef_256                            
+00032100  twiddleCoef_256_q15                        
+00030350  twiddleCoef_256_q31                        
+00033128  twiddleCoef_32                             
+000337f0  twiddleCoef_32_q15                         
+000333d0  twiddleCoef_32_q31                         
+00000140  twiddleCoef_4096                           
+0001d140  twiddleCoef_4096_q15                       
+00008140  twiddleCoef_4096_q31                       
+0002ae00  twiddleCoef_512                            
+00030950  twiddleCoef_512_q15                        
+0002e790  twiddleCoef_512_q31                        
+000326f8  twiddleCoef_64                             
+00033490  twiddleCoef_64_q15                         
+00032fa8  twiddleCoef_64_q31                         
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+address   name                                       
+-------   ----                                       
+00000000  __TI_static_base__                         
+00000000  interruptVectors                           
+00000140  twiddleCoef_4096                           
+00000200  __STACK_SIZE                               
+00008140  twiddleCoef_4096_q31                       
+00016140  twiddleCoef_2048                           
+0001a140  twiddleCoef_2048_q31                       
+0001d140  twiddleCoef_4096_q15                       
+00020140  twiddleCoef_1024                           
+00022140  armBitRevIndexTable4096                    
+000240c0  armBitRevIndexTable_fixed_4096             
+00026040  armBitRevIndexTable2048                    
+00027e00  twiddleCoef_1024_q31                       
+00029600  twiddleCoef_2048_q15                       
+0002ae00  twiddleCoef_512                            
+0002be00  armBitRevIndexTable_fixed_2048             
+0002cd80  armBitRevIndexTable1024                    
+0002db90  twiddleCoef_1024_q15                       
+0002e790  twiddleCoef_512_q31                        
+0002f390  twiddleCoef_256                            
+0002fb90  armBitRevIndexTable_fixed_1024             
+00030350  twiddleCoef_256_q31                        
+00030950  twiddleCoef_512_q15                        
+00030f50  twiddleCoef_128                            
+00031350  armBitRevIndexTable_fixed_512              
+00031710  armBitRevIndexTable512                     
+00031a90  armBitRevIndexTable256                     
+00031e00  twiddleCoef_128_q31                        
+00032100  twiddleCoef_256_q15                        
+000326f8  twiddleCoef_64                             
+000328f8  armBitRevIndexTable_fixed_256              
+00032ad8  arm_cfft_sR_f32_len16                      
+00032ae8  arm_cfft_sR_f32_len32                      
+00032af8  arm_cfft_sR_f32_len64                      
+00032b08  arm_cfft_sR_f32_len128                     
+00032b18  arm_cfft_sR_f32_len256                     
+00032b28  arm_cfft_sR_f32_len512                     
+00032b38  arm_cfft_sR_f32_len1024                    
+00032b48  arm_cfft_sR_f32_len2048                    
+00032b58  arm_cfft_sR_f32_len4096                    
+00032b68  arm_cfft_sR_q31_len16                      
+00032b78  arm_cfft_sR_q31_len32                      
+00032b88  arm_cfft_sR_q31_len64                      
+00032b98  arm_cfft_sR_q31_len128                     
+00032ba8  arm_cfft_sR_q31_len256                     
+00032bb8  arm_cfft_sR_q31_len512                     
+00032bc8  arm_cfft_sR_q31_len1024                    
+00032bd8  arm_cfft_sR_q31_len2048                    
+00032be8  arm_cfft_sR_q31_len4096                    
+00032bf8  arm_cfft_sR_q15_len16                      
+00032c08  arm_cfft_sR_q15_len32                      
+00032c18  arm_cfft_sR_q15_len64                      
+00032c28  arm_cfft_sR_q15_len128                     
+00032c38  arm_cfft_sR_q15_len256                     
+00032c48  arm_cfft_sR_q15_len512                     
+00032c58  arm_cfft_sR_q15_len1024                    
+00032c68  arm_cfft_sR_q15_len2048                    
+00032c78  arm_cfft_sR_q15_len4096                    
+00032c88  armBitRevIndexTable128                     
+00032e28  twiddleCoef_128_q15                        
+00032fa8  twiddleCoef_64_q31                         
+00033128  twiddleCoef_32                             
+00033228  armBitRevIndexTable_fixed_128              
+00033308  g_sFontFixed6x8                            
+000333d0  twiddleCoef_32_q31                         
+00033490  twiddleCoef_64_q15                         
+000335d0  twiddleCoef_16                             
+00033650  armBitRevIndexTable64                      
+000336c0  armBitRevIndexTable_fixed_64               
+00033730  armBitRevIndexTable32                      
+00033790  twiddleCoef_16_q31                         
+000337f0  twiddleCoef_32_q15                         
+00033850  armBitRevIndexTable_fixed_32               
+00033880  twiddleCoef_16_q15                         
+000338b0  g_sCrystalfontz128x128                     
+000338dc  armBitRevIndexTable16                      
+00033920  armBitRevIndexTable_fixed_16               
+00033939  main                                       
+00033f11  arm_radix4_butterfly_inverse_q15           
+0003424d  arm_radix4_butterfly_q15                   
+00034589  Graphics_drawString                        
+0003485b  __aeabi_dsub                               
+00034865  __aeabi_dadd                               
+00034b65  Crystalfontz128x128_Init                   
+00034d7b  __aeabi_dmul                               
+00034e77  arm_split_rfft_q15                         
+00034f55  arm_rfft_init_q15                          
+00035019  arm_bitreversal_32                         
+00035083  arm_bitreversal_16                         
+000350d9  arm_cfft_q15                               
+00035249  cosf                                       
+000352fd  arm_cfft_radix4by2_inverse_q15             
+000353a1  arm_cfft_radix4by2_q15                     
+00035445  __aeabi_memcpy                             
+00035445  __aeabi_memcpy4                            
+00035445  __aeabi_memcpy8                            
+00035445  memcpy                                     
+000354e1  SPI_initMaster                             
+00035579  Crystalfontz128x128_SetDrawFrame           
+000355fd  arm_split_rifft_q15                        
+0003567d  DMA_setChannelTransfer                     
+000356f9  arm_max_q15                                
+00035773  __aeabi_memclr                             
+00035773  __aeabi_memclr4                            
+00035773  __aeabi_memclr8                            
+00035775  __aeabi_memset                             
+00035775  __aeabi_memset4                            
+00035775  __aeabi_memset8                            
+0003577b  memset                                     
+000357ed  ADC14_configureConversionMemory            
+0003585d  __TI_auto_init                             
+000358cd  __aeabi_d2f                                
+0003593b  arm_rfft_q15                               
+00035a11  Graphics_getStringWidth                    
+00035a79  SystemInit                                 
+00035ae1  DMA_INT1_IRQHandler                        
+00035b95  GPIO_setAsPeripheralModuleFunctionOutputPin
+00035be9  _c_int00                                   
+00035c3d  C$$EXIT                                    
+00035c41  abort                                      
+00035c49  exit                                       
+00035c91  GPIO_setAsPeripheralModuleFunctionInputPin 
+00035ce1  copy_in                                    
+00035d2d  Graphics_drawLineH                         
+00035d77  Graphics_drawLineV                         
+00035dc1  ADC14_configureSingleSampleMode            
+00035e09  Timer_A_generatePWM                        
+00035e51  ADC14_initModule                           
+00035e95  DMA_disableChannelAttribute                
+00035ed9  ADC14_setSampleHoldTrigger                 
+00035f19  DMA_getChannelAttribute                    
+00035f59  HAL_LCD_SpiInit                            
+0003600f  Graphics_drawStringCentered                
+00036049  __aeabi_f2d                                
+00036081  Crystalfontz128x128_SetOrientation         
+000360b5  HAL_LCD_PortInit                           
+00036115  ADC14_setResultFormat                      
+0003618d  sqrtf                                      
+000361b5  GPIO_setAsOutputPin                        
+000361d9  HAL_LCD_writeCommand                       
+000361fd  DMA_setChannelControl                      
+0003621d  Graphics_initContext                       
+00036257  SPI_enableModule                           
+00036271  GPIO_setOutputLowOnPin                     
+00036289  _args_main                                 
+000362b7  Graphics_drawHorizontalLineOnDisplay       
+000362cd  Graphics_drawVerticalLineOnDisplay         
+000362e3  __mpu_init                                 
+000362f9  GPIO_setOutputHighOnPin                    
+0003630d  _register_unlock                           
+00036313  _register_lock                             
+0003631b  _nop                                       
+00036321  ADC14_enableModule                         
+00036331  DMA_enableModule                           
+00036341  HAL_LCD_writeData                          
+00036351  Graphics_drawPixelOnDisplay                
+0003635f  Graphics_setBackgroundColor                
+0003636d  Graphics_setForegroundColor                
+0003637b  __TI_decompress_none                       
+00036389  DMA_setControlBase                         
+00036395  EUSCI_A_SPI_enable                         
+000363a1  EUSCI_B_SPI_enable                         
+000363b9  Graphics_clearDisplayOnDisplay             
+000363c3  Graphics_translateColorOnDisplay           
+000363cd  Graphics_clearDisplay                      
+000363d5  __TI_decompress_rle24                      
+000363db  Graphics_setFont                           
+000363df  _system_pre_init                           
+000363e3  _system_post_cinit                         
+0003645c  __TI_Handler_Table_Base                    
+00036464  __TI_CINIT_Base                            
+00036464  __TI_Handler_Table_Limit                   
+00036474  __TI_CINIT_Limit                           
+20000000  data_input                                 
+20000800  hann                                       
+20001000  data_array1                                
+20001400  data_array2                                
+20001800  data_output                                
+20001c00  controlTable                               
+20001d00  g_sContext                                 
+20001d1c  Lcd_ScreenHeigth                           
+20001d1e  Lcd_ScreenWidth                            
+20001d20  Lcd_TouchTrim                              
+20001d22  Lcd_FlagRead                               
+20001d23  Lcd_FontSolid                              
+20001d24  Lcd_Orientation                            
+20001d25  Lcd_PenSolid                               
+20001d26  status                                     
+20001d58  pwmConfig                                  
+20001d70  fftSize                                    
+20001d74  ifftFlag                                   
+20001d78  doBitReverse                               
+20001d7c  switch_data                                
+20001d80  color                                      
+20001d84  __TI_cleanup_ptr                           
+20001d88  __TI_dtors_ptr                             
+20001d8c  __TI_enable_exit_profile_output            
+20001d90  _lock                                      
+20001d94  _unlock                                    
+20001d98  errno                                      
+20001d9c  main_func_sp                               
+2000fe00  __stack                                    
+20010000  __STACK_END                                
+4000480c  WDTCTL_SYM                                 
+ffffffff  __TI_pprof_out_hndl                        
+ffffffff  __TI_prof_data_size                        
+ffffffff  __TI_prof_data_start                       
+ffffffff  __binit__                                  
+ffffffff  __c_args__                                 
+ffffffff  binit                                      
+UNDEFED   SHT$$INIT_ARRAY$$Base                      
+UNDEFED   SHT$$INIT_ARRAY$$Limit                     
+
+[212 symbols]
