@@ -1,42 +1,9 @@
-/* --COPYRIGHT--,BSD
- * Copyright (c) 2015, Texas Instruments Incorporated
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * *  Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * *  Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * *  Neither the name of Texas Instruments Incorporated nor the names of
- *    its contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * --/COPYRIGHT--*/
 //****************************************************************************
 //
-// main.c - MSP-EXP432P401R + Educational Boosterpack MkII - Microphone FFT
+// main.c - Laboratorio 3
 //
-//          CMSIS DSP Software Library is used to perform 512-point FFT on
-//          the audio samples collected with MSP432's ADC14 from the Education
-//          Boosterpack's onboard microhpone. The resulting frequency bin data
-//          is displayed on the BoosterPack's 128x128 LCD.
+//         Jose Pablo Avila,Luis Diego Soto
+//         Desplazador de notas musicales controlado por luz
 //
 //****************************************************************************
 
@@ -50,49 +17,46 @@
 #include <HAL_I2C.h>
 #include <HAL_OPT3001.h>
 
-
+//constantes para la transformada rapida de Fourier
 #define TEST_LENGTH_SAMPLES 512
 #define SAMPLE_LENGTH 512
 
-/* ------------------------------------------------------------------
-* Global variables for FFT Bin Example
-* ------------------------------------------------------------------- */
-uint32_t fftSize = SAMPLE_LENGTH;
-uint32_t ifftFlag = 0;
-uint32_t doBitReverse = 1;
-volatile arm_status status;
 
-/* Graphic library context */
+/* Variables globales para la FFT */
+
+uint32_t g_u32FftSize = SAMPLE_LENGTH;
+uint32_t g_u32IfftFlag = 0;
+uint32_t g_u32DoBitReverse = 1;
+volatile arm_status g_asStatus;
+
+/* Contexto de graficos */
 Graphics_Context g_sContext;
+Graphics_Rectangle g_sShader;
 
 #define SMCLK_FREQUENCY     48000000
 #define SAMPLE_FREQUENCY    8000
 
 
-/* DMA Control Table */
+/* Tabla de control del DMA */
 #ifdef ewarm
 #pragma data_alignment=256
 #else
-#pragma DATA_ALIGN(controlTable, 256)
+#pragma DATA_ALIGN(g_u8ControlTable, 256)
 #endif
-uint8_t controlTable[256];
+uint8_t g_u8ControlTable[256];
 
 
-/* FFT data/processing buffers*/
-float hann[SAMPLE_LENGTH];
-int16_t data_array1[SAMPLE_LENGTH];
-int16_t data_array2[SAMPLE_LENGTH];
-int16_t data_input[SAMPLE_LENGTH*2];
-int16_t data_output[SAMPLE_LENGTH];
+/* Buffers de procesamiento de la fft*/
+float g_fHann[SAMPLE_LENGTH];
+int16_t g_i16DataArray1[SAMPLE_LENGTH];
+int16_t g_i16DataArray2[SAMPLE_LENGTH];
+int16_t g_i16DataInput[SAMPLE_LENGTH*2];
+int16_t g_i16DataOutput[SAMPLE_LENGTH];
 
-volatile int switch_data = 0;
-uint8_t g_u8Flag=0;
-uint8_t g_u8Flag2=1;
-uint32_t color = 0;
-uint32_t g_u32Lux;
-float g_fSampledFreq;
+volatile int g_iSwitchData = 0;
 
-/* Timer_A PWM Configuration Parameter */
+
+/* Configuracion PWM del Timer A */
 Timer_A_PWMConfig pwmConfig =
 {
         TIMER_A_CLOCKSOURCE_SMCLK,
@@ -102,46 +66,49 @@ Timer_A_PWMConfig pwmConfig =
         TIMER_A_OUTPUTMODE_SET_RESET,
         (SMCLK_FREQUENCY/SAMPLE_FREQUENCY)/2
 };
-
+/*Variables de control */
+uint8_t g_u8Flag=0;
+uint8_t g_u8Flag2=1;
+uint32_t color = 0;
 
 void main(void)
 {
-    /* Halting WDT and disabling master interrupts */
+    /* Se deshabilitan las interrupciones*/
     MAP_WDT_A_holdTimer();
     MAP_Interrupt_disableMaster();
 
-    /* Set the core voltage level to VCORE1 */
+    /* Voltaje del core VCORE1*/
     MAP_PCM_setCoreVoltageLevel(PCM_VCORE1);
 
-    /* Set 2 flash wait states for Flash bank 0 and 1*/
+    /* Estado de espera para los bancos 0 y 1 de la memoeria flash*/
     MAP_FlashCtl_setWaitState(FLASH_BANK0, 2);
     MAP_FlashCtl_setWaitState(FLASH_BANK1, 2);
 
-    /* Initializes Clock System */
+    /*Sistema de reloj a 48MHZ */
     MAP_CS_setDCOCenteredFrequency(CS_DCO_FREQUENCY_48);
     MAP_CS_initClockSignal(CS_MCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
     MAP_CS_initClockSignal(CS_HSMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
     MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
     MAP_CS_initClockSignal(CS_ACLK, CS_REFOCLK_SELECT, CS_CLOCK_DIVIDER_1);
-    /* Initialize I2C communication */
-        Init_I2C_GPIO();
-        I2C_init();
 
-        /* Initialize OPT3001 digital ambient light sensor */
-        OPT3001_init();
+    /* Inicializacion del interfaz I2C*/
+    Init_I2C_GPIO();
+    I2C_init();
 
-        __delay_cycles(100000);
+    /* Se inicializa el sensor de luz*/
+    OPT3001_init();
+     __delay_cycles(100000);
 
-    /* Initializes display */
+    /* Se inicializa la pantalla */
     Crystalfontz128x128_Init();
 
-    /* Set default screen orientation */
+    /* Orientacion de la pantalla */
     Crystalfontz128x128_SetOrientation(LCD_ORIENTATION_UP);
 
-    /* Initializes graphics context */
+    /* Contexto de graficos */
     Graphics_initContext(&g_sContext, &g_sCrystalfontz128x128);
 
-    /* Draw Title, x-axis, gradation & labels */
+    /* Ambiente grafico de la aplicacion */
     Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_BLACK);
     Graphics_setBackgroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
     GrContextFontSet(&g_sContext, &g_sFontFixed6x8);
@@ -159,11 +126,10 @@ void main(void)
     Graphics_drawLineV(&g_sContext, 96, 115, 117);
     Graphics_drawLineV(&g_sContext, 112, 115, 116);
     Graphics_drawLineV(&g_sContext, 127, 115, 117);
-    Graphics_Rectangle g_sShader;
     g_sShader.xMax = 128;
-   	 g_sShader.xMin = 30;
-   	 g_sShader.yMax = 15;
-   	 g_sShader.yMin = 0;
+   	g_sShader.xMin = 30;
+   	g_sShader.yMax = 15;
+   	g_sShader.yMin = 0;
     Graphics_drawStringCentered(&g_sContext,
                                     "FFT",
                                     AUTO_STRING_LENGTH,
@@ -208,68 +174,66 @@ void main(void)
                                     122,
                                     OPAQUE_TEXT);
 
-    // Initialize Hann Window
+    /* Ventana hann para al fft */
     int n;
     for (n = 0; n < SAMPLE_LENGTH; n++)
     {
-        hann[n] = 0.5 - 0.5 * cosf((2*PI*n)/(SAMPLE_LENGTH-1));
+        g_fHann[n] = 0.5 - 0.5 * cosf((2*PI*n)/(SAMPLE_LENGTH-1));
     }
 
-    /* Configuring Timer_A to have a period of approximately 500ms and
-     * an initial duty cycle of 10% of that (3200 ticks)  */
+    /* Configuracion del Timer_A1   */
     Timer_A_generatePWM(TIMER_A1_BASE, &pwmConfig);
 
-    /* Initializing ADC (MCLK/1/1) */
+    /* Inicializacion del ADC14 */
     ADC14_enableModule();
     ADC14_initModule(ADC_CLOCKSOURCE_MCLK, ADC_PREDIVIDER_1, ADC_DIVIDER_1, 0);
 
-    ADC14_setSampleHoldTrigger(ADC_TRIGGER_SOURCE3, false);
-    /*buzzer*/
+    ADC14_setSampleHoldTrigger(ADC_TRIGGER_SOURCE3, false); // gatillo por timer A1
 
+    /*Configuracion del TimerA0 para el buzzer*/
     TIMER_A0->CTL = TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_ID__8 ;
     TIMER_A0->CTL |=  TIMER_A_CTL_MC__UP;
-    TIMER_A0->CCR[0] =20;//6000000/frec; // 1500 -> 2 kHz a 3 MHz el system clock
-    TIMER_A0->CCR[4] =20; // 6000000/2*frec; // Periodo simétrico
-    TIMER_A0->CCTL[4] |= TIMER_A_CCTLN_OUTMOD_3; //Set/Reset (cuando CCR[0] se pone en 0, cuando CCR[1] se pone en 1)
-    P2->DIR |= BIT7; // La salida para el servo es el bit 7 del puerto 2
-    //P2->IE |= BIT7;
+    TIMER_A0->CCR[0] =20;
+    TIMER_A0->CCR[4] =20;// Inicialmente no debe zonar
+    TIMER_A0->CCTL[4] |= TIMER_A_CCTLN_OUTMOD_3; //Set/Reset (cuando CCR[0] se pone en 0, cuando CCR[4] se pone en 1)
+    P2->DIR |= BIT7; // La salida para el buzzer es el bit 7 del puerto 2
     P2->SEL0 =BIT7;
     P2->SEL1 =0;
-    //P2->IFG = 0;
     // Mapeo del Timer_A0.4 al pin 2.7 (PWM) output
     PMAP->KEYID = PMAP_KEYID_VAL;
     P2MAP ->PMAP_REGISTER7 |= PMAP_TA0CCR4A;
 
-   // BOTON CONFIG
-    	P1->DIR &= ~(BIT1) | ~(BIT4);
-    	P1->DIR |=BIT0;
-    	P2->DIR |=BIT1;
-    	P2->OUT &= ~(BIT1);
-    	P1->OUT |= BIT0;
-    	P1->OUT |= BIT1 | BIT4;
-    	P1->REN |= BIT1 | BIT4;                 // Enable pull-up resistor (P1.1 and P1.4 output high)
-    	P1->SEL0 &= ~(BIT1) | ~(BIT4);
-    	P1->SEL1 &= ~(BIT1) | ~(BIT4);
-    	P1->IFG &= ~(BIT1) | ~(BIT4);                   // Clear all P1 interrupt flags
-    	P1->IES |= BIT1 | BIT4;                 // Interrupt on high-to-low transition
-    	P1->IE |= BIT1 | BIT4;                  // Enable interrupt for P1.1 and P1.4
-    	NVIC_SetPriority(PORT1_IRQn,2);
-    		NVIC_EnableIRQ(PORT1_IRQn);
-    /* Configuring GPIOs (4.3 A10) */
+    /*Configuracion de botones y LEDS */
+    P1->DIR &= ~(BIT1) | ~(BIT4); // Entradsas para interrupciones
+    P1->DIR |=BIT0;// LED Rojo
+    P2->DIR |=BIT1;// LED Verde
+    P2->OUT &= ~(BIT1); // puerto en 0
+    P1->OUT |= BIT0; // inicialmente el led rojo encendido
+    P1->OUT |= BIT1 | BIT4;
+    P1->REN |= BIT1 | BIT4;                 // Enable pull-up resistor (P1.1 and P1.4 output high)
+    P1->SEL0 &= ~(BIT1) | ~(BIT4);
+    P1->SEL1 &= ~(BIT1) | ~(BIT4);
+    P1->IFG &= ~(BIT1) | ~(BIT4);                   // Limpiar banderas
+    P1->IES |= BIT1 | BIT4;                 // Flanco negativo
+    P1->IE |= BIT1 | BIT4;                  // Habilitar interupciones
+    NVIC_SetPriority(PORT1_IRQn,2);
+    NVIC_EnableIRQ(PORT1_IRQn);
+
+    /* GPIO del microfono (4.3 A10) */
     GPIO_setAsPeripheralModuleFunctionInputPin(GPIO_PORT_P4, GPIO_PIN3,
     GPIO_TERTIARY_MODULE_FUNCTION);
 
-    /* Configuring ADC Memory */
+    /* Memoria del ADc */
     ADC14_configureSingleSampleMode(ADC_MEM0, true);
     ADC14_configureConversionMemory(ADC_MEM0, ADC_VREFPOS_AVCC_VREFNEG_VSS,
     ADC_INPUT_A10, false);
 
-    /* Set ADC result format to signed binary */
+    /* Resultado del ADC en binario con signo*/
     ADC14_setResultFormat(ADC_SIGNED_BINARY);
 
-    /* Configuring DMA module */
+    /* Configuracion del DMA */
     DMA_enableModule();
-    DMA_setControlBase(controlTable);
+    DMA_setControlBase(g_u8ControlTable);
 
 
     DMA_disableChannelAttribute(DMA_CH7_ADC14,
@@ -278,118 +242,116 @@ void main(void)
                                  UDMA_ATTR_REQMASK);
 
 
-    /* Setting Control Indexes. In this case we will set the source of the
-     * DMA transfer to ADC14 Memory 0
-     *  and the destination to the
-     * destination data array. */
+    /* Indices de control. La fuente es la memoria del ADC y el destino es el arreglo con lso datos.*/
     MAP_DMA_setChannelControl(UDMA_PRI_SELECT | DMA_CH7_ADC14,
         UDMA_SIZE_16 | UDMA_SRC_INC_NONE | UDMA_DST_INC_16 | UDMA_ARB_1);
     MAP_DMA_setChannelTransfer(UDMA_PRI_SELECT | DMA_CH7_ADC14,
         UDMA_MODE_PINGPONG, (void*) &ADC14->MEM[0],
-        data_array1, SAMPLE_LENGTH);
+        g_i16DataArray1, SAMPLE_LENGTH);
 
     MAP_DMA_setChannelControl(UDMA_ALT_SELECT | DMA_CH7_ADC14,
         UDMA_SIZE_16 | UDMA_SRC_INC_NONE | UDMA_DST_INC_16 | UDMA_ARB_1);
     MAP_DMA_setChannelTransfer(UDMA_ALT_SELECT | DMA_CH7_ADC14,
         UDMA_MODE_PINGPONG, (void*) &ADC14->MEM[0],
-        data_array2, SAMPLE_LENGTH);
+        g_i16DataArray2, SAMPLE_LENGTH);
 
-    /* Assigning/Enabling Interrupts */
+    /* Se habilitan las interrupciones */
     MAP_DMA_assignInterrupt(DMA_INT1, 7);
     MAP_Interrupt_enableInterrupt(INT_DMA_INT1);
     MAP_DMA_assignChannel(DMA_CH7_ADC14);
     MAP_DMA_clearInterruptFlag(7);
     MAP_Interrupt_enableMaster();
 
-    /* Now that the DMA is primed and setup, enabling the channels. The ADC14
-     * hardware should take over and transfer/receive all bytes */
+    /*Se habilitan las conversiones */
     MAP_DMA_enableChannel(7);
     MAP_ADC14_enableConversion();
-    q15_t maxValue;
-           uint32_t maxIndex = 0;
-           float maxFreq ;
-           char stringFreq [20];
+    /*Variables locales */
+    q15_t l_q15MaxValue;
+    uint32_t l_u32MaxIndex = 0;
+    float l_fMaxFreq ;
+    char l_cStringFreq [20];
+    float l_fSampledFreq;
+    uint32_t l_u32Lux;
+
     while(1)
     {
         MAP_PCM_gotoLPM0();
 
         int i = 0;
 
-        /* Computer real FFT using the completed data buffer */
-        if (switch_data & 1)
+        /* Se calcula la FFt con el buffer de datos completado */
+        if (g_iSwitchData & 1)
         {
             for (i=0; i<512; i++)
             {
-                data_array1[i] = (int16_t)(hann[i]*data_array1[i]);
+                g_i16DataArray1[i] = (int16_t)(g_fHann[i]*g_i16DataArray1[i]);
             }
             arm_rfft_instance_q15 instance;
-            status = arm_rfft_init_q15(&instance, fftSize, ifftFlag, doBitReverse);
+            g_asStatus = arm_rfft_init_q15(&instance, g_u32FftSize, g_u32IfftFlag, g_u32DoBitReverse);
 
-            arm_rfft_q15(&instance, data_array1, data_input);
+            arm_rfft_q15(&instance, g_i16DataArray1, g_i16DataInput);
         }
         else
         {
             for (i=0; i<512; i++)
             {
-                data_array2[i] = (int16_t)(hann[i]*data_array2[i]);
+                g_i16DataArray2[i] = (int16_t)(g_fHann[i]*g_i16DataArray2[i]);
             }
             arm_rfft_instance_q15 instance;
-            status = arm_rfft_init_q15(&instance, fftSize, ifftFlag, doBitReverse);
+            g_asStatus = arm_rfft_init_q15(&instance, g_u32FftSize, g_u32IfftFlag, g_u32DoBitReverse);
 
-            arm_rfft_q15(&instance, data_array2, data_input);
+            arm_rfft_q15(&instance, g_i16DataArray2, g_i16DataInput);
         }
 
-        /* Calculate magnitude of FFT complex output */
+        /* Se calcula la magnitud de la fft */
         for (i = 0; i < 1024; i+=2)
         {
-            data_output[i/2] = (int32_t)(sqrtf((data_input[i] * data_input[i]) + (data_input[i+1] * data_input[i+1])));
+            g_i16DataOutput[i/2] = (int32_t)(sqrtf((g_i16DataInput[i] * g_i16DataInput[i]) + (g_i16DataInput[i+1] * g_i16DataInput[i+1])));
         }
 
 
-
-        arm_max_q15(data_output, fftSize, &maxValue, &maxIndex);
-
-        if (maxIndex <= 64)
-            color = ((uint32_t)(0xFF * (maxIndex / 64.0f)) << 8) + 0xFF;
-        else if (maxIndex <= 128)
-            color = (0xFF - (uint32_t)(0xFF * ((maxIndex-64) / 64.0f))) + 0xFF00;
-        else if (maxIndex <= 192)
-            color = ((uint32_t)(0xFF * ((maxIndex-128) / 64.0f)) << 16) + 0xFF00;
+        /*Se obtiene el indice con la magnitud mayor   */
+        arm_max_q15(g_i16DataOutput, g_u32FftSize, &l_q15MaxValue, &l_u32MaxIndex);
+        /*Logica de color del grafico */
+        if (l_u32MaxIndex <= 64)
+            color = ((uint32_t)(0xFF * (l_u32MaxIndex / 64.0f)) << 8) + 0xFF;
+        else if (l_u32MaxIndex <= 128)
+            color = (0xFF - (uint32_t)(0xFF * ((l_u32MaxIndex-64) / 64.0f))) + 0xFF00;
+        else if (l_u32MaxIndex <= 192)
+            color = ((uint32_t)(0xFF * ((l_u32MaxIndex-128) / 64.0f)) << 16) + 0xFF00;
         else
-            color = ((0xFF - (uint32_t)(0xFF * ((maxIndex-192) / 64.0f))) << 8) + 0xFF0000;
-        maxFreq=maxIndex*15.79-10.58; //ecuacion lineal de la frecuencia en funcion del indice del arreglo
-        if(maxFreq<=0)
-        	maxFreq=0;
-        Graphics_fillRectangleOnDisplay(g_sContext.display,
-        		 	            		&g_sShader, GRAPHICS_COLOR_WHITE);
+            color = ((0xFF - (uint32_t)(0xFF * ((l_u32MaxIndex-192) / 64.0f))) << 8) + 0xFF0000;
+
+        l_fMaxFreq=l_u32MaxIndex*15.79-10.58; //ecuacion lineal de la frecuencia en funcion del indice del arreglo
+        if(l_fMaxFreq<=0)
+        	l_fMaxFreq=0;
+        Graphics_fillRectangleOnDisplay(g_sContext.display,&g_sShader, GRAPHICS_COLOR_WHITE); // se refresca la frecuencia maxima
         Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_RED);
-        sprintf(stringFreq, "%f", maxFreq);
-                Graphics_drawStringCentered(&g_sContext,
-                                                (int8_t *)stringFreq,
-                                                6,
-                                                55,
-                                                6,
-                                                OPAQUE_TEXT);
+        sprintf(l_cStringFreq, "%f", l_fMaxFreq);
+        Graphics_drawStringCentered(&g_sContext,(int8_t *)l_cStringFreq,6,55,6,OPAQUE_TEXT);
 
-         if(g_u8Flag==1)
+         if(g_u8Flag==1) // si se debe reproducir
          	 {
-
-        	 	 if(g_u8Flag2==1)
-        	 	 {g_fSampledFreq=maxFreq;
-        	 	 g_u8Flag2=0U;}
-        	 	g_u32Lux = OPT3001_getLux()/5000;
-        	 	if(g_u32Lux==0)
-        	 		g_u32Lux=1;
-        	 	TIMER_A0->CCR[0] =6000000/(g_u32Lux*g_fSampledFreq);//6000000/frec; // 1500 -> 2 kHz a 3 MHz el system clock
-        	 	TIMER_A0->CCR[4] =6000000/(2*g_u32Lux*g_fSampledFreq); // 6000000/2*frec; // Periodo simétrico}}
-         	 }
+        	 if(g_u8Flag2==1)
+        	 	 {
+        		 l_fSampledFreq=l_fMaxFreq; // si es la primera vez en este estado
+        	 	 g_u8Flag2=0U;
+        	 	 }
+        	 l_u32Lux = OPT3001_getLux()/5000;// se obtiene la lectura de luz
+        	 if(l_u32Lux==0)
+        	 	l_u32Lux=1;
+        	TIMER_A0->CCR[0] =6000000/(l_u32Lux*l_fSampledFreq);  //Periodo
+        	TIMER_A0->CCR[4] =6000000/(2*l_u32Lux*l_fSampledFreq); //Semiperiodo
+         	  }
          else
-         	 {TIMER_A0->CCR[0]=20;
-         	 TIMER_A0->CCR[4]=20;}
-        /* Draw frequency bin graph */
+         	 {
+        	 TIMER_A0->CCR[0]=20; // no suena
+         	 TIMER_A0->CCR[4]=20;
+         	 }
+        /* Se dibuja el grafico de la FFT */
         for (i = 0; i < 256; i+=2)
         {
-            int x = min(100, (int)((data_output[i]+data_output[i+1])/8));
+            int x = min(100, (int)((g_i16DataOutput[i]+g_i16DataOutput[i+1])/8));
 
             Graphics_setForegroundColor(&g_sContext, GRAPHICS_COLOR_WHITE);
             Graphics_drawLineV(&g_sContext, i/2, 114-x, 14);
@@ -400,18 +362,18 @@ void main(void)
 }
 
 
-/* Completion interrupt for ADC14 MEM0 */
+/* Subrutina de atencion a interrupciones del DMA */
 void DMA_INT1_IRQHandler(void)
 {
-    /* Switch between primary and alternate bufferes with DMA's PingPong mode */
+    /* Se selecciona el buffer del DMA de acuerdo al modo PING POMG del DMA */
     if (DMA_getChannelAttribute(7) & UDMA_ATTR_ALTSELECT)
     {
         DMA_setChannelControl(UDMA_PRI_SELECT | DMA_CH7_ADC14,
             UDMA_SIZE_16 | UDMA_SRC_INC_NONE | UDMA_DST_INC_16 | UDMA_ARB_1);
         DMA_setChannelTransfer(UDMA_PRI_SELECT | DMA_CH7_ADC14,
             UDMA_MODE_PINGPONG, (void*) &ADC14->MEM[0],
-            data_array1, SAMPLE_LENGTH);
-        switch_data = 1;
+            g_i16DataArray1, SAMPLE_LENGTH);
+        g_iSwitchData = 1;
     }
     else
     {
@@ -419,18 +381,18 @@ void DMA_INT1_IRQHandler(void)
             UDMA_SIZE_16 | UDMA_SRC_INC_NONE | UDMA_DST_INC_16 | UDMA_ARB_1);
         DMA_setChannelTransfer(UDMA_ALT_SELECT | DMA_CH7_ADC14,
             UDMA_MODE_PINGPONG, (void*) &ADC14->MEM[0],
-            data_array2, SAMPLE_LENGTH);
-        switch_data = 0;
+            g_i16DataArray2, SAMPLE_LENGTH);
+        g_iSwitchData = 0;
     }
 }
-
+/* Subrutina de atencion a interrupciones del Puerto 1 */
 void PORT1_IRQHandler(void)
 {
 
 
-    // Toggling the output on the LED
+
     if(P1->IFG & BIT1){
-    		g_u8Flag=1;
+    		g_u8Flag=1; // Bandera en alto para indicar que se debe pasar al estado de reproduccion
     		P1->OUT &= ~(BIT0);
     		P2->OUT |= BIT1;
    	    	P1->IFG &= ~BIT1;
@@ -438,11 +400,11 @@ void PORT1_IRQHandler(void)
     }
     else if(P1->IFG & BIT4){
 
-    	g_u8Flag=0;
-    	g_u8Flag2=1;
-    	P1->OUT |= BIT0;
-    	P2->OUT &= ~(BIT1);
-    	   	P1->IFG &= ~BIT4;
+			g_u8Flag=0; // Bandera en bajo para indicar estado de grabacion
+			g_u8Flag2=1; // Bandera en alto para indicar que en al siguiente activacion se debe seleccionar una frecuencia maxima
+			P1->OUT |= BIT0;
+			P2->OUT &= ~(BIT1);
+			P1->IFG &= ~BIT4;
 
     }
     return;
